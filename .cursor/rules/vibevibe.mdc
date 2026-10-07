@@ -341,7 +341,7 @@ do not poll faster than every few seconds.
 | `/sparklines?tokens=<t1>,<t2>` | small price series |
 | `/market/quote-usd-rates`, `/v6/pair-prices` | USD rates for pair currencies |
 
-Images: `ipfs://<cid>` -> `https://ipfs.filebase.io/ipfs/<cid>`. Public gateways often answer 429 (too many requests), so in a page try several in turn on `<img onerror>`: filebase, `gateway.pinata.cloud`, `ipfs.io`, `dweb.link`. Do not use `testnet.vibevibe.fun/media/<cid>.webp`: it blocks other sites.
+Images: `ipfs://<cid>` -> `https://ipfs.filebase.io/ipfs/<cid>`. Public gateways often answer 429 (too many requests), and some hang for a long time instead of failing. In a page, load the image from all of these at once with `new Image()` and show the first one that loads: `ipfs.filebase.io`, `gateway.pinata.cloud`, `ipfs.io`, `dweb.link` (all `/ipfs/<cid>`). If none loads, show the symbol's first letters instead. Do not use `testnet.vibevibe.fun/media/<cid>.webp`: it blocks other sites.
 
 ## 8. Rules for the assistant
 

@@ -141,12 +141,17 @@ function ipfsUrls(uri) {
   const m = /^ipfs:\/\/(.+)$/.exec(uri || "") || /\/ipfs\/([^?#]+)/.exec(uri || "");
   return m ? IPFS_GATEWAYS.map(g => g + m[1]) : uri ? [uri] : [];
 }
-// <img> that falls back to the next gateway when one fails; onFail runs when none work
+// <img> from whichever gateway answers first (some hang instead of failing); onFail runs when none work
 function loadImage(img, uri, onFail) {
-  const urls = ipfsUrls(uri); let i = 0;
+  const urls = ipfsUrls(uri); let done = false, failed = 0;
   if (!urls.length) return onFail && onFail();
-  img.onerror = () => { if (++i < urls.length) img.src = urls[i]; else { img.onerror = null; onFail && onFail(); } };
-  img.src = urls[0];
+  for (const u of urls) {
+    const probe = new Image();
+    probe.onload = () => { if (!done) { done = true; img.src = u; } };
+    probe.onerror = () => { if (++failed === urls.length && !done) { done = true; onFail && onFail(); } };
+    probe.src = u;
+  }
+  setTimeout(() => { if (!done) { done = true; onFail && onFail(); } }, 20000);
 }
 const ago = sec => { const s = Date.now() / 1000 - sec; return s < 60 ? Math.max(1, Math.round(s)) + "s ago" : s < 3600 ? Math.round(s / 60) + "m ago" : s < 86400 ? Math.round(s / 3600) + "h ago" : Math.round(s / 86400) + "d ago"; };
 
