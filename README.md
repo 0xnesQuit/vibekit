@@ -6,7 +6,7 @@ vibekit gives you three things:
 
 1. **Ready-made apps for your token**: a token page, a holders-only page and a Discord/Telegram buy bot.
    Paste your token address, done.
-2. **An AI that knows vibe/vibe**: one file (`AGENTS.md`) that teaches ChatGPT, Claude, Codex, Cursor, Gemini or Copilot
+2. **An AI that knows vibe/vibe**: one file (`AGENTS.md`) that teaches ChatGPT, Claude, Codex, DeepSeek, Cursor, Gemini or Copilot
    every vibe/vibe contract, rule and code pattern, checked on the live chain, plus an **MCP server** that lets your AI
    look at live tokens, trades, holders and guilds while it builds.
 3. **Recipes**: copy-paste prompts that end in a working app.
@@ -38,7 +38,8 @@ router, holder lists, RPC limits).
 
 - **Codex, Cursor, GitHub Copilot, Windsurf**: read `AGENTS.md` automatically when it's in your project folder.
 - **Claude Code**: `CLAUDE.md` imports it. **Gemini CLI**: `GEMINI.md` imports it.
-- **ChatGPT, Claude.ai and any chat AI**: attach `vibevibe.md` to the chat (or a Project).
+- **Cline and Roo Code** (VS Code extensions, often used with DeepSeek models): `.clinerules/` and `.roo/rules/` hold the same file.
+- **ChatGPT, Claude.ai, DeepSeek chat and any chat AI**: attach `vibevibe.md` to the chat (or a Project).
 
 Every template folder already contains these files.
 
@@ -60,6 +61,8 @@ https://vibercheck.xyz/api/mcp
 | Gemini CLI | `~/.gemini/settings.json`: `{"mcpServers":{"vibekit":{"httpUrl":"https://vibercheck.xyz/api/mcp"}}}` |
 | VS Code (Copilot) | `.vscode/mcp.json`: `{"servers":{"vibekit":{"type":"http","url":"https://vibercheck.xyz/api/mcp"}}}` |
 | Windsurf | `mcp_config.json`: `{"mcpServers":{"vibekit":{"serverUrl":"https://vibercheck.xyz/api/mcp"}}}` |
+| Cline / Roo Code (e.g. with DeepSeek) | MCP Servers → Remote Servers → URL above |
+| DeepSeek chat | no custom MCP yet: attach `vibevibe.md` instead |
 
 The **starter folder** on [vibercheck.xyz/build](https://vibercheck.xyz/build#ai) comes with all of these already set up
 for the folder: open it in your tool and start talking.

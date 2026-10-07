@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>vibekit · build on vibe/vibe with AI</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Build on vibe/vibe without knowing how to code: ready-made token pages and bots, step by step setup for ChatGPT, Claude, Codex, Cursor and Gemini, and copy-paste prompts.">
+<meta name="description" content="Build on vibe/vibe without knowing how to code: ready-made token pages and bots, step by step setup for ChatGPT, Claude, Codex, DeepSeek, Cursor and Gemini, and copy-paste prompts.">
 <meta property="og:title" content="vibekit · build on vibe/vibe with AI"><meta property="og:description" content="Token pages, buy bots and holder gates in one minute, and an AI that knows vibe/vibe. No coding needed.">
 <meta property="og:image" content="/og.png"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#000000"><link rel="icon" href="/favicon.svg">
@@ -50,7 +50,7 @@
   <div class="hero">
     <span class="eyebrow"><i></i>VIBEKIT · BUILD ON VIBE/VIBE WITH AI</span>
     <h1>Build on vibe/vibe.<br><em>No coding needed.</em></h1>
-    <p class="lead">Ready-made pages and bots for your token in one minute, and an AI that actually knows vibe/vibe: the contracts, the curve, graduation, the tax. Works with ChatGPT, Claude, Codex, Cursor, Gemini and VS Code.</p>
+    <p class="lead">Ready-made pages and bots for your token in one minute, and an AI that actually knows vibe/vibe: the contracts, the curve, graduation, the tax. Works with ChatGPT, Claude, Codex, DeepSeek, Cursor, Gemini and VS Code.</p>
     <div class="paths">
       <a href="#ready"><span class="n">01</span><b>Give me something ready</b><span>Paste your token, download a token page, a holders-only page or a buy bot.</span></a>
       <a href="#ai"><span class="n">02</span><b>Let my AI build it</b><span>Step by step setup for your AI tool, so it writes vibe/vibe code that works.</span></a>
@@ -223,6 +223,16 @@ const TABS = {
       <li>${starterBtn} and unzip it (it has <b>AGENTS.md</b> and Windsurf rules). Open it in Windsurf.</li>
       <li>Cascade → <b>MCP servers → Manage → View raw config</b>, add:${copyBlock(`{\n  "mcpServers": {\n    "vibekit": { "serverUrl": "${URL_}" }\n  }\n}`)}</li>
       <li>Refresh, then paste the first message below in Cascade.</li></ol>`,
+  "DeepSeek": () => `<ol>
+      <li>${dlFile}</li>
+      <li>Open <a href="https://chat.deepseek.com" target="_blank" rel="noopener">chat.deepseek.com</a>, click the <b>📎</b> (attach) button and add <b>vibevibe.md</b>. Turn on <b>DeepThink</b> for bigger builds.</li>
+      <li>Paste the first message from the box below and say what you want to build.</li></ol>
+    <p class="note" style="margin-top:12px">DeepSeek's chat can't connect to live data, so if it needs a token's current state, ask it to write code that reads it from the chain (the file shows how), or use the option below.</p>
+    <div class="alt"><h4>DeepSeek inside VS Code (Cline or Roo Code) <span class="tag">live data</span></h4><ol>
+      <li>Install the free <b>Cline</b> or <b>Roo Code</b> extension in VS Code and choose <b>DeepSeek</b> as the provider (with your DeepSeek API key).</li>
+      <li>${starterBtn}, unzip it and open the folder in VS Code. It already has Cline and Roo Code rules with the vibe/vibe file.</li>
+      <li>In the extension: <b>MCP Servers → Remote Servers</b>, name <b>vibekit</b>, URL:${copyBlock(URL_)}</li>
+      <li>Paste the first message below in the extension's chat.</li></ol></div>`,
   "Other AI": () => `<ol><li>${dlFile}</li><li>Give it to your AI (attach it, or paste its text) and paste the first message below.</li>
       <li>If your tool supports MCP servers over HTTP, add:${copyBlock(URL_)}</li></ol>`,
 };
@@ -245,12 +255,13 @@ async function starterZip() {
   d.file("AGENTS.md", ctx); d.file("CLAUDE.md", "@AGENTS.md\n"); d.file("GEMINI.md", "@./AGENTS.md\n");
   d.file(".cursor/rules/vibevibe.mdc", "---\ndescription: vibe/vibe (Robinhood Chain testnet) facts and code\nalwaysApply: true\n---\n" + ctx);
   d.file(".windsurf/rules/vibevibe.md", ctx); d.file(".github/copilot-instructions.md", ctx);
+  d.file(".clinerules/vibevibe.md", ctx); d.file(".roo/rules/vibevibe.md", ctx);   // Cline, Roo Code (often used with DeepSeek)
   d.file(".mcp.json", JSON.stringify({ mcpServers: { vibekit: { type: "http", url: URL_ } } }, null, 2));
   d.file(".cursor/mcp.json", JSON.stringify({ mcpServers: { vibekit: { url: URL_ } } }, null, 2));
   d.file(".vscode/mcp.json", JSON.stringify({ servers: { vibekit: { type: "http", url: URL_ } } }, null, 2));
   d.file(".gemini/settings.json", JSON.stringify({ mcpServers: { vibekit: { httpUrl: URL_ } } }, null, 2));
   d.file(".codex/config.toml", `[mcp_servers.vibekit]\nurl = "${URL_}"\n`);
-  d.file("START.md", `# Your vibe/vibe project\n\nOpen this folder in your AI tool (Claude Code, Codex, Cursor, Gemini CLI, VS Code, Windsurf).\nIt already knows vibe/vibe (AGENTS.md) and is connected to live vibe/vibe data (vibekit MCP).\n\nPaste this as your first message:\n\n${starterText()}\n\nSetup help: https://vibercheck.xyz/build\n`);
+  d.file("START.md", `# Your vibe/vibe project\n\nOpen this folder in your AI tool (Claude Code, Codex, Cursor, Gemini CLI, VS Code with Copilot, Cline or Roo Code, Windsurf).\nIt already knows vibe/vibe (AGENTS.md) and is connected to live vibe/vibe data (vibekit MCP).\n\nPaste this as your first message:\n\n${starterText()}\n\nSetup help: https://vibercheck.xyz/build\n`);
   const a = document.createElement("a"); a.href = URL.createObjectURL(await zip.generateAsync({ type: "blob" })); a.download = "my-vibevibe-app.zip"; a.click();
   toast("downloaded: unzip and open the folder in your AI tool");
 }

@@ -14,6 +14,8 @@ const files = {
   ".github/copilot-instructions.md": note + ctx,                       // GitHub Copilot (older versions)
   ".cursor/rules/vibevibe.mdc": "---\ndescription: vibe/vibe (Robinhood Chain testnet) facts and code\nalwaysApply: true\n---\n" + ctx,
   ".windsurf/rules/vibevibe.md": note + ctx,
+  ".clinerules/vibevibe.md": note + ctx,                               // Cline (VS Code extension, often used with DeepSeek)
+  ".roo/rules/vibevibe.md": note + ctx,                                // Roo Code
 };
 const TPL = path.join(ROOT, "templates");
 const targets = [ROOT, ...fs.readdirSync(TPL).filter(t => !t.startsWith("_")).map(t => path.join(TPL, t)).filter(p => fs.statSync(p).isDirectory())];
