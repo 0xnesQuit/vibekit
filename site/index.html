@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>vibekit · build on vibe/vibe with AI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Build on vibe/vibe without knowing how to code: ready-made token pages and bots, step by step setup for ChatGPT, Claude, Codex, Cursor and Gemini, and copy-paste prompts.">
+<meta property="og:title" content="vibekit · build on vibe/vibe with AI"><meta property="og:description" content="Token pages, buy bots and holder gates in one minute, and an AI that knows vibe/vibe. No coding needed.">
+<meta property="og:image" content="/og.png"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#000000"><link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css?v=2">
+<style>
+  .hero{padding:60px 0 20px} .hero h1{font-size:clamp(40px,7vw,88px);margin:18px 0 14px}
+  .paths{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:30px 0 10px}
+  .paths a{display:block;padding:20px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--g0)}
+  .paths a:hover{border-color:var(--lime)} .paths b{display:block;font-family:var(--display);font-size:22px;margin:8px 0 6px} .paths span{color:var(--g1);font-size:15px}
+  .paths .n{font-family:var(--mono);font-size:12px;color:var(--lime)}
+  section.sec{margin-top:70px;scroll-margin-top:80px} section.sec>h2{font-size:clamp(28px,4vw,44px)} section.sec>.lead{margin-top:8px;max-width:760px}
+  .tokbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px} .tokbar input{flex:1;min-width:260px;height:48px;border-radius:12px;border:1px solid var(--line);background:#050606;color:var(--g0);font:15px var(--mono);padding:0 14px;outline:0}
+  .tokbar input:focus{border-color:var(--lime)} .tokinfo{margin-top:12px;min-height:24px;color:var(--g1);font-size:15px} .tokinfo b{color:var(--g0)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:10px}
+  .card h3{font-family:var(--display);font-size:22px} .card p{color:var(--g1);font-size:15px;flex:1} .card .row{display:flex;gap:8px;flex-wrap:wrap}
+  .card label{font-size:13px;color:var(--g2);display:flex;flex-direction:column;gap:4px} .card input,.card textarea{background:#050606;border:1px solid var(--line);border-radius:10px;color:var(--g0);padding:9px 11px;font:14px var(--ui)}
+  .card textarea{min-height:70px;resize:vertical}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px} .tabs button{height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--g1);font:600 14px var(--ui);cursor:pointer}
+  .tabs button.on{border-color:var(--lime);color:var(--lime)}
+  .tab{margin-top:14px;padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+  .tab ol{padding-left:22px;display:flex;flex-direction:column;gap:14px;font-size:16px} .tab li::marker{color:var(--lime);font-family:var(--mono)}
+  .tab .alt{margin-top:22px;padding-top:18px;border-top:1px dashed var(--line)} .tab h4{font-family:var(--display);font-size:18px;margin-bottom:10px}
+  .code{position:relative;margin-top:8px;background:#050606;border:1px solid var(--line);border-radius:10px;padding:12px 70px 12px 14px;font:13px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word;color:#d7dce2}
+  .code button{position:absolute;top:8px;right:8px;height:28px;padding:0 10px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--g1);font:600 12px var(--ui);cursor:pointer}
+  .code button:hover{color:var(--lime);border-color:var(--lime)}
+  .tag{display:inline-block;font:600 11px var(--mono);padding:3px 8px;border-radius:99px;background:#1b1e21;color:var(--g1);margin-left:6px;vertical-align:2px}
+  .recipes{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+  .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px} .tools div{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;font-size:14px;color:var(--g1)} .tools b{display:block;color:var(--g0);font-family:var(--mono);font-size:13px;margin-bottom:4px}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:10px} summary{cursor:pointer;font-weight:600} details p{color:var(--g1);margin-top:8px}
+  @media (max-width:860px){.paths,.cards,.recipes,.tools{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="/"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="3" y="3" width="10" height="9" fill="#dff902"/><rect x="4" y="5" width="8" height="4" fill="#000"/><rect x="5" y="6" width="2" height="2" fill="#dff902"/><rect x="9" y="6" width="2" height="2" fill="#dff902"/><rect x="7" y="1" width="2" height="2" fill="#dff902"/><rect x="5" y="13" width="6" height="2" fill="#6a63c8"/></svg>VIBER CHECK <small>TESTNET</small></a>
+  <div class="navr"><a class="by hide-s" href="https://x.com/0xHaileyy" target="_blank" rel="noopener">by @0xHaileyy</a><a class="btn ghost hide-s" href="/">My viber</a><a class="btn ghost" href="/guilds">Guilds</a><a class="btn lime" href="/build">Build</a></div>
+</div></nav>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="eyebrow"><i></i>VIBEKIT · BUILD ON VIBE/VIBE WITH AI</span>
+    <h1>Build on vibe/vibe.<br><em>No coding needed.</em></h1>
+    <p class="lead">Ready-made pages and bots for your token in one minute, and an AI that actually knows vibe/vibe: the contracts, the curve, graduation, the tax. Works with ChatGPT, Claude, Codex, Cursor, Gemini and VS Code.</p>
+    <div class="paths">
+      <a href="#ready"><span class="n">01</span><b>Give me something ready</b><span>Paste your token, download a token page, a holders-only page or a buy bot.</span></a>
+      <a href="#ai"><span class="n">02</span><b>Let my AI build it</b><span>Step by step setup for your AI tool, so it writes vibe/vibe code that works.</span></a>
+      <a href="#recipes"><span class="n">03</span><b>Give me ideas</b><span>Copy a prompt, paste it into your AI, get a working app.</span></a>
+    </div>
+  </div>
+
+  <section class="sec" id="ready">
+    <h2>Ready in one minute</h2>
+    <p class="lead">Paste your token address (from its vibe/vibe page: testnet.vibevibe.fun/token/<b>0x…</b>). Everything below fills itself in.</p>
+    <div class="tokbar"><input id="tok" placeholder="0x… your token address" autocomplete="off" spellcheck="false"><button class="btn lime" id="load">Use this token</button></div>
+    <div class="tokinfo" id="tokinfo">no token? try <a href="#" id="demo">a demo token</a></div>
+    <div class="cards">
+      <div class="card"><h3>Token page</h3><p>Live price, graduation progress, tax, holders, live trades and a buy box. One file: double click to open, drag to Netlify to publish.</p>
+        <label>Title (optional)<input id="tp_title" placeholder="uses the token name"></label>
+        <label>Color<input id="tp_accent" type="color" value="#dff902" style="height:40px;padding:4px"></label>
+        <div class="row"><button class="btn lime" data-dl="token-page">Download</button><button class="btn ghost" data-pv="token-page">Preview</button></div></div>
+      <div class="card"><h3>Holders-only page</h3><p>Visitors connect their wallet; if they hold enough of your token they see your members content.</p>
+        <label>Tokens needed<input id="tg_min" type="number" value="1000000"></label>
+        <label>What holders see<textarea id="tg_members">Welcome in! Here's the members link: https://example.com</textarea></label>
+        <div class="row"><button class="btn lime" data-dl="token-gate">Download</button><button class="btn ghost" data-pv="token-gate">Preview</button></div></div>
+      <div class="card"><h3>Buy alert bot</h3><p>Posts every buy in your Discord or Telegram. Runs with Node.js, nothing to install. The README walks you through getting a Discord webhook or a Telegram bot in two minutes.</p>
+        <div class="row"><button class="btn lime" data-dl="buy-bot">Download</button></div></div>
+    </div>
+    <p class="note" style="margin-top:12px">Each download is a small zip with the file already set to your token, a README with every step, and an AGENTS.md so any AI tool can change it for you.</p>
+  </section>
+
+  <section class="sec" id="ai">
+    <h2>Let your AI build it</h2>
+    <p class="lead">Two things make an AI good at vibe/vibe: our <b>vibe/vibe file</b> (every contract, rule and code snippet, checked on chain) and the <b>vibekit connection</b> (an MCP server that lets it look at live tokens, trades and holders). Pick your tool:</p>
+    <div class="tabs" id="tabs"></div>
+    <div class="tab" id="tab"></div>
+    <div class="code" id="starter" style="margin-top:14px"></div>
+    <p class="note">↑ A good first message for any AI. It fills in your token from above.</p>
+  </section>
+
+  <section class="sec" id="recipes">
+    <h2>Recipes</h2>
+    <p class="lead">Copy, paste into your AI (set up as above), change the bits in [brackets]. Each one ends in a working app.</p>
+    <div class="recipes" id="rec"></div>
+  </section>
+
+  <section class="sec">
+    <h2>What your AI can do with vibekit</h2>
+    <p class="lead">Once connected, it has these tools. All read-only: it can look, never spend. The trade tool only prepares a transaction you sign in your own wallet.</p>
+    <div class="tools" id="tools"></div>
+  </section>
+
+  <section class="sec">
+    <h2>Questions</h2>
+    <details><summary>Do I need to know how to code?</summary><p>No. The templates work by pasting your token address. For anything else, your AI writes the code; vibekit makes sure it uses the right contracts and rules.</p></details>
+    <details><summary>Is it safe?</summary><p>vibekit never asks for a private key and never sends anything. Everything is Robinhood Chain testnet, where tokens have no real value. Never paste a real wallet's private key into any AI or website.</p></details>
+    <details><summary>What is MCP?</summary><p>A standard way to give an AI assistant extra tools. Adding the vibekit address lets your AI look up live vibe/vibe data (tokens, trades, holders, guilds) while it builds.</p></details>
+    <details><summary>Is this made by vibe/vibe?</summary><p>No. vibekit is an unofficial community toolkit by @0xHaileyy, built from vibe/vibe's public contracts and data. The code is open source.</p></details>
+  </section>
+
+  <footer><span>Unofficial community tool, not affiliated with vibe/vibe. Robinhood Chain testnet only; nothing here has monetary value.</span><span>built by <a href="https://x.com/0xHaileyy" target="_blank" rel="noopener">@0xHaileyy</a> · <a href="https://github.com/0xnesQuit/vibekit" target="_blank" rel="noopener">GitHub</a></span></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const MCP_URL = location.origin + "/api/mcp", F = "/build/files/";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+let TOKEN = null, INFO = null;
+const toast = t => { let e = $("toast"); if (!e) { e = document.createElement("div"); e.id = "toast"; e.className = "toast"; document.body.appendChild(e); } e.textContent = t; e.classList.add("on"); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove("on"), 1800); };
+const copyBlock = (text, id) => `<div class="code"${id ? ` id="${id}"` : ""}>${esc(text)}<button data-copy>copy</button></div>`;
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const t = b.parentElement.cloneNode(true); t.querySelector("button").remove();
+  navigator.clipboard.writeText(t.textContent).then(() => toast("copied"));
+});
+async function mcp(name, args) {
+  const r = await fetch(MCP_URL, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }) }).then(r => r.json());
+  if (!r.result || r.result.isError) throw new Error(r.result ? r.result.content[0].text : "error"); return r.result.structuredContent;
+}
+
+// ---------- 1. token ----------
+async function useToken(addr) {
+  addr = addr.trim(); if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) { $("tokinfo").textContent = "that doesn't look like an address (0x + 40 characters)"; return; }
+  $("tokinfo").textContent = "looking it up on Robinhood Chain…";
+  try {
+    INFO = await mcp("get_token", { token: addr }); if (INFO.error) throw new Error(INFO.error);
+    TOKEN = addr; localStorage.setItem("vk_token", addr);
+    $("tokinfo").innerHTML = `✅ <b>${esc(INFO.name)}</b> ($${esc(INFO.symbol)}) · paired with ${INFO.pairIsEth ? "ETH" : "a token"} · ${INFO.graduated ? "graduated" : INFO.graduationProgressPercent + "% to graduation"} · tax now ${INFO.taxNowPercent}%`;
+    if (!$("tp_title").value) $("tp_title").placeholder = INFO.name;
+  } catch (e) { TOKEN = null; INFO = null; $("tokinfo").textContent = "could not load it: " + e.message; }
+  renderStarter(); renderRecipes();
+}
+$("load").onclick = () => useToken($("tok").value);
+$("tok").onkeydown = e => { if (e.key === "Enter") useToken($("tok").value); };
+$("demo").onclick = e => { e.preventDefault(); $("tok").value = "0xdD708a2f0728C17C00D22cE6D4785F9Eb982e25C"; useToken($("tok").value); };
+
+// ---------- templates ----------
+const cache = {};
+const getText = async f => cache[f] ??= await fetch(F + f + "?v=1").then(r => { if (!r.ok) throw new Error(f); return r.text(); });
+const jsStr = s => JSON.stringify(String(s));
+async function build(kind) {
+  if (!TOKEN) { toast("paste your token address first"); $("tok").focus(); throw new Error("no token"); }
+  const setToken = t => t.replace(/token: "PASTE_YOUR_TOKEN_ADDRESS_HERE"/, `token: "${TOKEN}"`);
+  if (kind === "buy-bot") return setToken(await getText("buy-bot/bot.js"));
+  let h = setToken(await getText(kind + "/index.html"));
+  if (kind === "token-page") {
+    const s = INFO && INFO.socials || {}, img = INFO && INFO.image || "";
+    h = h.replace(/title: "",/, `title: ${jsStr($("tp_title").value)},`).replace(/image: "",/, `image: ${jsStr(img)},`)
+      .replace(/accent: "#dff902",/, `accent: ${jsStr($("tp_accent").value)},`)
+      .replace(/links: \{ website: "", x: "", telegram: "", discord: "" \}/, `links: { website: ${jsStr(s.website || "")}, x: ${jsStr(s.x || "")}, telegram: ${jsStr(s.telegram || "")}, discord: ${jsStr(s.discord || "")} }`);
+    if (INFO && INFO.description) h = h.replace(/tagline: "",/, `tagline: ${jsStr(INFO.description.split("\n")[0].slice(0, 180))},`);
+  }
+  if (kind === "token-gate") h = h.replace(/minimum: 1000000,/, `minimum: ${Number($("tg_min").value) || 1},`).replace(/members: `[\s\S]*?`,/, `members: ${jsStr($("tg_members").value.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>'))},`);
+  return h;
+}
+document.addEventListener("click", async e => {
+  const pv = e.target.closest("[data-pv]"), dl = e.target.closest("[data-dl]"); if (!pv && !dl) return;
+  try {
+    const kind = (pv || dl).dataset.pv || (pv || dl).dataset.dl, body = await build(kind);
+    if (pv) { const u = URL.createObjectURL(new Blob([body], { type: "text/html" })); window.open(u, "_blank"); return; }
+    const zip = new JSZip(), dir = zip.folder(`${kind}-${(INFO && INFO.symbol || "token").toLowerCase()}`);
+    dir.file(kind === "buy-bot" ? "bot.js" : "index.html", body);
+    for (const f of ["README.md", "AGENTS.md", "CLAUDE.md", "GEMINI.md"]) dir.file(f, await getText(kind + "/" + f));
+    const blob = await zip.generateAsync({ type: "blob" }), a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = `${kind}-${(INFO && INFO.symbol || "token").toLowerCase()}.zip`; a.click();
+    toast("downloaded: unzip it and open README.md");
+  } catch (err) { if (err.message !== "no token") toast("could not build it, try again"); }
+});
+
+// ---------- 2. AI tools ----------
+const URL_ = "https://vibercheck.xyz/api/mcp";
+const dlFile = `<a class="btn dark" href="${F}vibevibe.md" download="vibevibe.md">Download the vibe/vibe file</a>`;
+const starterBtn = `<button class="btn lime" id="starterzip">Download the starter folder</button>`;
+const TABS = {
+  "ChatGPT": () => `<ol>
+      <li>${dlFile}</li>
+      <li>Open <a href="https://chatgpt.com" target="_blank" rel="noopener">chatgpt.com</a>, start a new chat (or a <b>Project</b>, so every chat remembers it) and attach <b>vibevibe.md</b> with the <b>+</b> button.</li>
+      <li>Paste the first message from the box below and say what you want to build.</li></ol>
+    <div class="alt"><h4>Plus / Pro: give ChatGPT live vibe/vibe data <span class="tag">optional</span></h4><ol>
+      <li>On chatgpt.com open <b>Settings</b> and turn on <b>Developer mode</b> (under <b>Apps &amp; Connectors → Advanced settings</b>; on some accounts it sits under <b>Security</b>).</li>
+      <li>Back in <b>Apps &amp; Connectors</b>, click <b>Create</b>. Name: <b>vibekit</b>. MCP server URL:${copyBlock(URL_)}Authentication: <b>No authentication</b>. Tick "I trust this application", click <b>Create</b>.</li>
+      <li>In a chat, click <b>+ → Developer mode</b> and switch on <b>vibekit</b>. Now ask things like "how close is token 0x… to graduating?"</li></ol></div>`,
+  "Claude": () => `<ol>
+      <li>Open <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> (or the Claude app): <b>Settings → Connectors → Add custom connector</b>.</li>
+      <li>Name: <b>vibekit</b>. Remote MCP server URL:${copyBlock(URL_)}Click <b>Add</b>. (No sign-in needed.)</li>
+      <li>In a chat, open the <b>tools</b> menu and make sure <b>vibekit</b> is on. Paste the first message below.</li></ol>
+    <div class="alt"><h4>No connectors on your plan?</h4><ol><li>${dlFile}</li><li>Attach it to the chat (or add it to a Project's knowledge) and paste the first message below.</li></ol></div>`,
+  "Claude Code": () => `<ol>
+      <li>${starterBtn} and unzip it. It already has <b>CLAUDE.md</b> (the vibe/vibe file) and <b>.mcp.json</b> (the vibekit connection).</li>
+      <li>Open a terminal in that folder and run <b>claude</b>. Approve the vibekit server when asked.</li>
+      <li>Paste the first message below.</li></ol>
+    <div class="alt"><h4>Add vibekit to every project instead</h4>${copyBlock(`claude mcp add --transport http vibekit ${URL_}`)}</div>`,
+  "Codex": () => `<ol>
+      <li>${starterBtn} and unzip it. It has <b>AGENTS.md</b>, which Codex reads automatically.</li>
+      <li>Connect vibekit once (Codex CLI or the IDE extension):${copyBlock(`codex mcp add vibekit --url ${URL_}`)}or add this to <b>~/.codex/config.toml</b>:${copyBlock(`[mcp_servers.vibekit]\nurl = "${URL_}"`)}</li>
+      <li>Open the folder with Codex and paste the first message below.</li></ol>
+    <div class="alt"><h4>Codex in ChatGPT (cloud)</h4><p>Put <b>AGENTS.md</b> from the starter folder in the root of your GitHub repository. Codex reads it on every task.</p></div>`,
+  "Cursor": () => `<ol>
+      <li>${starterBtn} and unzip it. It has <b>AGENTS.md</b>, Cursor rules and <b>.cursor/mcp.json</b> (the vibekit connection).</li>
+      <li>In Cursor: <b>File → Open Folder</b>, pick it. Go to <b>Settings → MCP</b> and switch <b>vibekit</b> on if it isn't.</li>
+      <li>Open the chat (Ctrl/Cmd + L) and paste the first message below.</li></ol>
+    <div class="alt"><h4>Add it to all your projects</h4><p>Put this in <b>~/.cursor/mcp.json</b>:</p>${copyBlock(`{\n  "mcpServers": {\n    "vibekit": { "url": "${URL_}" }\n  }\n}`)}</div>`,
+  "Gemini CLI": () => `<ol>
+      <li>${starterBtn} and unzip it. It has <b>GEMINI.md</b> and <b>.gemini/settings.json</b> (the vibekit connection).</li>
+      <li>Open a terminal in that folder and run <b>gemini</b>. Check with <b>/mcp</b> that vibekit is connected.</li>
+      <li>Paste the first message below.</li></ol>
+    <div class="alt"><h4>Add it for every folder</h4><p>In <b>~/.gemini/settings.json</b>:</p>${copyBlock(`{\n  "mcpServers": {\n    "vibekit": { "httpUrl": "${URL_}" }\n  }\n}`)}</div>`,
+  "VS Code": () => `<ol>
+      <li>${starterBtn} and unzip it. It has <b>AGENTS.md</b> and <b>.vscode/mcp.json</b> (the vibekit connection).</li>
+      <li>Open the folder in VS Code, open <b>.vscode/mcp.json</b> and click <b>Start</b> above vibekit.</li>
+      <li>Open Copilot Chat in <b>Agent</b> mode and paste the first message below.</li></ol>`,
+  "Windsurf": () => `<ol>
+      <li>${starterBtn} and unzip it (it has <b>AGENTS.md</b> and Windsurf rules). Open it in Windsurf.</li>
+      <li>Cascade → <b>MCP servers → Manage → View raw config</b>, add:${copyBlock(`{\n  "mcpServers": {\n    "vibekit": { "serverUrl": "${URL_}" }\n  }\n}`)}</li>
+      <li>Refresh, then paste the first message below in Cascade.</li></ol>`,
+  "Other AI": () => `<ol><li>${dlFile}</li><li>Give it to your AI (attach it, or paste its text) and paste the first message below.</li>
+      <li>If your tool supports MCP servers over HTTP, add:${copyBlock(URL_)}</li></ol>`,
+};
+let tabNow = "ChatGPT";
+function renderTabs() {
+  $("tabs").innerHTML = Object.keys(TABS).map(k => `<button class="${k === tabNow ? "on" : ""}" data-tab="${k}">${k}</button>`).join("");
+  $("tab").innerHTML = TABS[tabNow](); const z = $("starterzip"); if (z) z.onclick = starterZip;
+}
+$("tabs").onclick = e => { const b = e.target.closest("[data-tab]"); if (b) { tabNow = b.dataset.tab; renderTabs(); } };
+function starterText() {
+  return `I want to build something on vibe/vibe (testnet.vibevibe.fun), a token launchpad on Robinhood Chain testnet.
+Use the vibe/vibe file (vibevibe.md / AGENTS.md) and, if you have it, the vibekit tools. Never guess addresses or functions.
+${TOKEN ? `My token is ${TOKEN}${INFO ? ` ($${INFO.symbol})` : ""}.` : "My token address is [paste it here]."}
+I am a beginner: give me complete files, and tell me exactly what to click and type to run them.
+What I want: [describe it in your own words]`;
+}
+function renderStarter() { $("starter").innerHTML = esc(starterText()) + "<button data-copy>copy</button>"; }
+async function starterZip() {
+  const zip = new JSZip(), d = zip.folder("my-vibevibe-app"), ctx = await getText("vibevibe.md");
+  d.file("AGENTS.md", ctx); d.file("CLAUDE.md", "@AGENTS.md\n"); d.file("GEMINI.md", "@./AGENTS.md\n");
+  d.file(".cursor/rules/vibevibe.mdc", "---\ndescription: vibe/vibe (Robinhood Chain testnet) facts and code\nalwaysApply: true\n---\n" + ctx);
+  d.file(".windsurf/rules/vibevibe.md", ctx); d.file(".github/copilot-instructions.md", ctx);
+  d.file(".mcp.json", JSON.stringify({ mcpServers: { vibekit: { type: "http", url: URL_ } } }, null, 2));
+  d.file(".cursor/mcp.json", JSON.stringify({ mcpServers: { vibekit: { url: URL_ } } }, null, 2));
+  d.file(".vscode/mcp.json", JSON.stringify({ servers: { vibekit: { type: "http", url: URL_ } } }, null, 2));
+  d.file(".gemini/settings.json", JSON.stringify({ mcpServers: { vibekit: { httpUrl: URL_ } } }, null, 2));
+  d.file(".codex/config.toml", `[mcp_servers.vibekit]\nurl = "${URL_}"\n`);
+  d.file("START.md", `# Your vibe/vibe project\n\nOpen this folder in your AI tool (Claude Code, Codex, Cursor, Gemini CLI, VS Code, Windsurf).\nIt already knows vibe/vibe (AGENTS.md) and is connected to live vibe/vibe data (vibekit MCP).\n\nPaste this as your first message:\n\n${starterText()}\n\nSetup help: https://vibercheck.xyz/build\n`);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(await zip.generateAsync({ type: "blob" })); a.download = "my-vibevibe-app.zip"; a.click();
+  toast("downloaded: unzip and open the folder in your AI tool");
+}
+
+// ---------- 3. recipes ----------
+let RECIPES = [];
+function renderRecipes() {
+  $("rec").innerHTML = RECIPES.map(r => {
+    const p = r.prompt.replace(/\{TOKEN\}/g, TOKEN || "[your token address]").replace(/\{(\w+)\}/g, (m, k) => "[" + k.toLowerCase().replace(/_/g, " ") + "]");
+    return `<div class="card"><h3>${esc(r.title)} <span class="tag">${esc(r.level)}</span></h3><p>${esc(r.get)}</p>${copyBlock(p)}
+      ${r.template ? `<p class="note" style="flex:0">or skip the AI: <a href="#ready">download the ready-made ${esc(r.template)}</a></p>` : ""}</div>`;
+  }).join("");
+}
+fetch(F + "recipes.json?v=1").then(r => r.json()).then(j => { RECIPES = j; renderRecipes(); });
+fetch(MCP_URL, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }) }).then(r => r.json())
+  .then(j => { $("tools").innerHTML = j.result.tools.map(t => `<div><b>${esc(t.name)}</b>${esc(t.description.split(". ")[0])}.</div>`).join(""); });
+
+renderTabs(); renderStarter();
+const saved = localStorage.getItem("vk_token"); if (saved) { $("tok").value = saved; useToken(saved); }
+</script>
+</body>
+</html>

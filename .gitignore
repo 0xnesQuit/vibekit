@@ -1,0 +1,7 @@
+node_modules/
+research/try/
+research/bot_test.cjs
+research/*.json
+research/*.txt
+.env
+research/.testwallet

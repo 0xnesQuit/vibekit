@@ -1,0 +1,61 @@
+[
+  {
+    "id": "token-page",
+    "title": "A website for my token",
+    "get": "A landing page with live price, graduation progress, trades, holders and a buy button.",
+    "level": "easiest",
+    "template": "token-page",
+    "prompt": "Make a website for my vibe/vibe token {TOKEN}. Use the vibekit token-page template as the starting point if you have it. Show the live price, progress to graduation, the current tax, holders, the latest trades and a big \"Buy on vibe/vibe\" button. Style: {STYLE}. Give me one index.html file I can open by double clicking, and tell me how to put it online for free."
+  },
+  {
+    "id": "buy-bot",
+    "title": "Buy alerts in Discord or Telegram",
+    "get": "A bot that posts every buy of your token in your channel, with the buyer and the graduation progress.",
+    "level": "easy",
+    "template": "buy-bot",
+    "prompt": "Build me a bot that posts a message in my {CHANNEL} every time someone buys my vibe/vibe token {TOKEN}. Use the vibekit buy-bot template if you have it. Show the amount, who bought, and how close the token is to graduation. It should run with just Node.js (no packages to install). Explain step by step how I get the webhook / bot token and how to run it."
+  },
+  {
+    "id": "holders-only",
+    "title": "A page only holders can open",
+    "get": "Visitors connect their wallet; holders see a secret link or message.",
+    "level": "easy",
+    "template": "token-gate",
+    "prompt": "Make a holders-only page for my vibe/vibe token {TOKEN}: visitors connect their wallet (MetaMask or Rabby) on Robinhood Chain testnet, and if they hold at least {AMOUNT} tokens they see this: {SECRET}. Otherwise show how many they have, how many they need, and a button to buy on vibe/vibe. One index.html file."
+  },
+  {
+    "id": "leaderboard",
+    "title": "Top buyers leaderboard",
+    "get": "A live ranking of who bought the most of your token this week.",
+    "level": "easy",
+    "prompt": "Make a web page that ranks the wallets that bought the most of my vibe/vibe token {TOKEN} in the last 7 days, using the CurveBuy events (and pool Swap events if it has graduated). Remember that trades through the zap router have the real wallet as the recipient or the transaction sender. Show rank, wallet, amount bought, and refresh every minute. One index.html file."
+  },
+  {
+    "id": "chart",
+    "title": "A price chart",
+    "get": "A candle chart of your token, like on an exchange.",
+    "level": "medium",
+    "prompt": "Add a price chart of my vibe/vibe token {TOKEN} to my page. Build the candles from the CurveBuy / CurveSell events (price = pair amount / token amount) for the last 24 hours, 15 minute candles, and draw them with a free chart library from a CDN. One index.html file."
+  },
+  {
+    "id": "game",
+    "title": "A small game for holders",
+    "get": "A browser mini game where holding your token unlocks something (a skin, a level, a score boost).",
+    "level": "medium",
+    "prompt": "Make a small browser game ({GAME_IDEA}) for my vibe/vibe token {TOKEN}. Players can play without a wallet, but if they connect a wallet that holds my token they unlock {PERK}. Keep it in one index.html file with plain JavaScript, no build tools, and make it work on phones."
+  },
+  {
+    "id": "graduation-watch",
+    "title": "Tokens about to graduate",
+    "get": "A list of tokens closest to graduation, updated live.",
+    "level": "medium",
+    "prompt": "Make a page that lists the vibe/vibe tokens that are closest to graduation right now, with their progress bar, price and a link to buy. Use the newest launches (LaunchCreated events or the vibe/vibe REST API from a small server) and read each curve's pairPrincipal / targetPairUnits. Explain which parts must run on a server and why."
+  },
+  {
+    "id": "explain-token",
+    "title": "Explain my token to my community",
+    "get": "A clear, honest explanation of how your token works: the curve, the tax split, graduation.",
+    "level": "no code",
+    "prompt": "Look up my vibe/vibe token {TOKEN} and explain to my community, in simple words, how it works: the bonding curve, why transfers are locked until graduation, how far it is from graduating, the current tax and where the tax goes (treasury, holders, burn). No hype, no price promises. Write it as a short post I can share."
+  }
+]

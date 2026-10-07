@@ -1,0 +1,10 @@
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+const client = new Client({ name: "vibekit-test", version: "1.0.0" });
+await client.connect(new StreamableHTTPClientTransport(new URL(process.argv[2] || "https://vibercheck.xyz/api/mcp")));
+console.log("server:", client.getServerVersion(), "| instructions:", (client.getInstructions() || "").slice(0, 60));
+const { tools } = await client.listTools(); console.log("tools:", tools.length, tools.map(t => t.name).join(", "));
+const r = await client.callTool({ name: "get_token", arguments: { token: "0xdD708a2f0728C17C00D22cE6D4785F9Eb982e25C" } });
+console.log("get_token:", r.structuredContent && r.structuredContent.symbol, r.structuredContent && r.structuredContent.graduationProgressPercent + "%");
+const g = await client.callTool({ name: "list_guilds", arguments: { limit: 3 } }); console.log("guilds:", g.structuredContent.guilds.map(x => x.rank + " " + x.name).join(" | "));
+await client.close();

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Holders only</title>
+<!--
+  ============================================================================
+   HOLDERS-ONLY PAGE (made with vibekit)
+   Visitors connect their wallet. If they hold enough of your token, they see the members part.
+   1. Open this file in any text editor (Notepad works).
+   2. Paste your token address and write what holders should see.
+   3. Save, double click the file to try it. Done.
+   Note: the members part is inside this file, so someone who opens the page source can read it.
+   Good for perks, invite links and fun extras on testnet. Not for real secrets.
+  ============================================================================
+-->
+<script>
+window.CONFIG = {
+  // Your token address (from its vibe/vibe page: testnet.vibevibe.fun/token/0x...)
+  token: "PASTE_YOUR_TOKEN_ADDRESS_HERE",
+
+  // How many tokens a wallet needs to get in
+  minimum: 1000000,
+
+  title: "Holders only",
+  intro: "Hold the token, connect your wallet, and you're in.",
+
+  // What holders see. You can use HTML: links, images, lists...
+  members: `
+    <h2>Welcome in 🎉</h2>
+    <p>Thanks for holding. Here's the members link:</p>
+    <p><a href="https://example.com">https://example.com</a></p>
+  `,
+
+  accent: "#dff902",
+};
+</script>
+<!-- ======================= no need to edit below this line ======================= -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--accent:#dff902;--bg:#06070a;--panel:#101318;--line:#1f242c;--g0:#f2f4f3;--g1:#aab2bb;--g2:#6c7580;--dn:#ff7a6b}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--g0);font:17px/1.6 "Space Grotesk",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:24px}
+  body::before{content:"";position:fixed;inset:-30% -10% auto;height:70vh;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 20%,transparent),transparent);pointer-events:none;z-index:-1}
+  .box{width:min(560px,100%);background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:34px;text-align:center}
+  h1{font-size:clamp(32px,6vw,52px);line-height:1;letter-spacing:-.02em} .intro{color:var(--g1);margin-top:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;height:50px;padding:0 24px;border-radius:14px;border:0;background:var(--accent);color:#000;font:700 16px "Space Grotesk";cursor:pointer;text-decoration:none;margin-top:24px}
+  .btn.ghost{background:transparent;color:var(--g0);border:1px solid var(--line)} .btn:disabled{opacity:.5}
+  .msg{margin-top:16px;color:var(--g1);font-size:15px;min-height:24px} .mono{font-family:"JetBrains Mono",monospace;font-size:13px}
+  .members{margin-top:26px;text-align:left;border-top:1px solid var(--line);padding-top:22px} .members h2{margin-bottom:8px} .members a{color:var(--accent)}
+  .bar{height:10px;border-radius:99px;background:#1a1e25;overflow:hidden;margin-top:14px} .bar i{display:block;height:100%;background:var(--accent)}
+  .foot{margin-top:24px;color:var(--g2);font-size:12px}
+</style>
+</head>
+<body>
+<div class="box" id="app"><p style="color:#6c7580">loading…</p></div>
+<script type="module">
+/*VIBE_JS*/
+
+const C = window.CONFIG, $ = id => document.getElementById(id);
+document.documentElement.style.setProperty("--accent", C.accent || "#dff902");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+if (!/^0x[0-9a-fA-F]{40}$/.test(C.token || "")) {
+  $("app").innerHTML = `<h1>Almost there</h1><p class="intro">Open <b>index.html</b> in a text editor, paste your token address where it says <span class="mono">PASTE_YOUR_TOKEN_ADDRESS_HERE</span>, save and reload.</p>`;
+  throw new Error("no token set");
+}
+let info;
+try { info = await tokenInfo(C.token); } catch (e) { $("app").innerHTML = `<h1>Hmm</h1><p class="intro">${esc(e.message)}</p>`; throw e; }
+document.title = `${C.title} · $${info.symbol}`;
+$("app").innerHTML = `<h1>${esc(C.title)}</h1><p class="intro">${esc(C.intro)}</p>
+  <p class="intro">You need <b>${fmt(C.minimum)} $${esc(info.symbol)}</b>.</p>
+  <button class="btn" id="go">Connect wallet</button><div class="msg" id="msg"></div><div id="out"></div>
+  <p class="foot">Robinhood Chain testnet · <a href="${tokenPage(info.token)}" target="_blank" rel="noopener" style="color:inherit">$${esc(info.symbol)} on vibe/vibe</a> · made with <a href="https://vibercheck.xyz/build" target="_blank" rel="noopener" style="color:inherit">vibekit</a></p>`;
+
+$("go").onclick = async () => {
+  const msg = $("msg"); msg.style.color = ""; $("go").disabled = true;
+  try {
+    const { account } = await connectWallet();
+    msg.innerHTML = `checking <span class="mono">${short(account)}</span>…`;
+    const bal = await balanceOf(info.token, account);
+    if (bal >= Number(C.minimum)) {
+      $("go").remove(); msg.innerHTML = `✅ <span class="mono">${short(account)}</span> holds ${fmt(bal)} $${esc(info.symbol)}`;
+      $("out").innerHTML = `<div class="members">${C.members}</div>`;
+    } else {
+      const pct = Math.min(100, bal / Number(C.minimum) * 100);
+      msg.innerHTML = `You hold <b>${fmt(bal)}</b> of the <b>${fmt(C.minimum)}</b> $${esc(info.symbol)} needed.<div class="bar"><i style="width:${pct}%"></i></div>`;
+      $("out").innerHTML = `<a class="btn" href="${tokenPage(info.token)}" target="_blank" rel="noopener">Get $${esc(info.symbol)} on vibe/vibe</a>
+        <p class="msg">${info.graduated ? "" : "Before graduation tokens can only be bought, not sent between wallets, so get them on vibe/vibe."} Then come back and check again.</p>`;
+      $("go").textContent = "Check again"; $("go").className = "btn ghost";
+    }
+  } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 160); }
+  finally { const g = $("go"); if (g) g.disabled = false; }
+};
+</script>
+</body>
+</html>

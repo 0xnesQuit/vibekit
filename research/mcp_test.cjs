@@ -1,0 +1,21 @@
+const { handle } = require("../mcp/core.cjs");
+const call = async (name, args) => { const r = await handle({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }); const t = r.result.content[0].text; console.log("\n## " + name, r.result.isError ? "ERROR" : "", "\n" + t.slice(0, 700)); };
+(async () => {
+  const init = await handle({ jsonrpc: "2.0", id: 0, method: "initialize", params: { protocolVersion: "2025-06-18" } }); console.log(init.result.serverInfo, init.result.protocolVersion);
+  const list = await handle({ jsonrpc: "2.0", id: 1, method: "tools/list" }); console.log("tools:", list.result.tools.map(t => t.name).join(", "));
+  const T = "0xdD708a2f0728C17C00D22cE6D4785F9Eb982e25C", ETHT = "0x4A84161B6Bc6De966b36BFDEaA3b5c3d161cb73b", W = "0x19298c37FDcBEb0a7619e9D1CF6058d932ee74FC";
+  await call("vibevibe_docs", { topic: "lifecycle" });
+  await call("search_tokens", { query: "viber", limit: 2 });
+  await call("latest_launches", { limit: 2 });
+  await call("get_token", { token: T });
+  await call("get_trades", { token: T, limit: 2 });
+  await call("get_holders", { token: T, limit: 3 });
+  await call("get_price_history", { token: T, interval: "1h" });
+  await call("get_wallet", { wallet: W });
+  await call("quote_trade", { token: ETHT, side: "buy", amount: "0.01" });
+  await call("quote_trade", { token: T, side: "sell", amount: "1000" });
+  await call("build_trade_transaction", { token: ETHT, side: "buy", amount: "0.01", wallet: W });
+  await call("build_trade_transaction", { token: T, side: "buy", amount: "1", wallet: W });
+  await call("list_guilds", { limit: 3 });
+  await call("get_guild", { slug: "heathside" });
+})();
