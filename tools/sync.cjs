@@ -49,6 +49,9 @@ fs.rmSync(FILES, { recursive: true, force: true });
 const put = (rel, from) => { const f = path.join(FILES, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.copyFileSync(from, f); };
 put("vibevibe.md", path.join(ROOT, "context", "vibevibe.md"));
 put("recipes.json", path.join(ROOT, "recipes", "recipes.json"));
+// big media (the guide video) is kept out of git in site/media and served next to the files
+const MEDIA = path.join(ROOT, "site", "media");
+if (fs.existsSync(MEDIA)) for (const f of fs.readdirSync(MEDIA)) put(f, path.join(MEDIA, f));
 for (const t of ["token-page", "token-gate", "buy-bot"]) for (const f of ["index.html", "bot.js", "README.md", "AGENTS.md", "CLAUDE.md", "GEMINI.md"]) {
   const src = path.join(TPL, t, f); if (fs.existsSync(src)) put(`${t}/${f}`, src);
 }

@@ -38,6 +38,7 @@
   .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px} .tools div{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;font-size:14px;color:var(--g1)} .tools b{display:block;color:var(--g0);font-family:var(--mono);font-size:13px;margin-bottom:4px}
   details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:10px} summary{cursor:pointer;font-weight:600} details p{color:var(--g1);margin-top:8px}
   @media (max-width:860px){.paths,.cards,.recipes,.tools{grid-template-columns:1fr}}
+  video.guide{display:block;width:100%;aspect-ratio:16/9;border-radius:14px;border:1px solid var(--line);background:#0b0d0f;margin-top:14px}
 </style>
 </head>
 <body>
@@ -57,6 +58,12 @@
       <a href="#recipes"><span class="n">03</span><b>Give me ideas</b><span>Copy a prompt, paste it into your AI, get a working app.</span></a>
     </div>
   </div>
+
+  <section class="sec" id="watch">
+    <h2>Watch: zero to a live token page</h2>
+    <p class="lead">One minute: a ready-made token page, then Claude Code building one from a single message.</p>
+    <video class="guide" src="files/vibekit-guide.mp4?v=1#t=2" controls preload="metadata" playsinline></video>
+  </section>
 
   <section class="sec" id="ready">
     <h2>Ready in one minute</h2>
@@ -108,7 +115,7 @@
     <details><summary>Is this made by vibe/vibe?</summary><p>No. vibekit is an unofficial community toolkit by @0xHaileyy, built from vibe/vibe's public contracts and data. The code is open source.</p></details>
   </section>
 
-  <footer><span>Unofficial community tool, not affiliated with vibe/vibe. Robinhood Chain testnet only; nothing here has monetary value.</span><span>built by <a href="https://x.com/0xHaileyy" target="_blank" rel="noopener">@0xHaileyy</a> · <a href="https://github.com/0xnesQuit/vibekit" target="_blank" rel="noopener">GitHub</a></span></footer>
+  <footer><span>Unofficial community tool, not affiliated with vibe/vibe. Robinhood Chain testnet only; nothing here has monetary value.</span><span>built by <a href="https://x.com/0xHaileyy" target="_blank" rel="noopener">@0xHaileyy</a> · <a href="https://github.com/0xnesQuit/vibekit" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.npmjs.com/package/vibevibekit" target="_blank" rel="noopener">npm</a></span></footer>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>

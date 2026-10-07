@@ -5,3 +5,4 @@ research/*.json
 research/*.txt
 .env
 research/.testwallet
+site/media/
