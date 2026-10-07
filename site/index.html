@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="/base.css?v=2">
 <style>
   .hero{padding:60px 0 20px} .hero h1{font-size:clamp(40px,7vw,88px);margin:18px 0 14px}
-  .paths{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:30px 0 10px}
+  .paths{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:30px 0 10px}
   .paths a{display:block;padding:20px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--g0)}
   .paths a:hover{border-color:var(--lime)} .paths b{display:block;font-family:var(--display);font-size:22px;margin:8px 0 6px} .paths span{color:var(--g1);font-size:15px}
   .paths .n{font-family:var(--mono);font-size:12px;color:var(--lime)}
@@ -56,6 +56,7 @@
       <a href="#ready"><span class="n">01</span><b>Give me something ready</b><span>Paste your token, download a token page, a holders-only page or a buy bot.</span></a>
       <a href="#ai"><span class="n">02</span><b>Let my AI build it</b><span>Step by step setup for your AI tool, so it writes vibe/vibe code that works.</span></a>
       <a href="#recipes"><span class="n">03</span><b>Give me ideas</b><span>Copy a prompt, paste it into your AI, get a working app.</span></a>
+      <a href="#dev"><span class="n">04</span><b>I'm a developer</b><span>npx vibevibekit: one command for a starter folder or an app, plus a JS SDK and the MCP.</span></a>
     </div>
   </div>
 
@@ -82,6 +83,7 @@
       <div class="card"><h3>Buy alert bot</h3><p>Posts every buy in your Discord or Telegram. Runs with Node.js, nothing to install. The README walks you through getting a Discord webhook or a Telegram bot in two minutes.</p>
         <div class="row"><button class="btn lime" data-dl="buy-bot">Download</button></div></div>
     </div>
+    <div class="alt" style="margin-top:14px"><h4>Prefer the terminal? Same apps, one command <span class="tag">needs Node.js</span></h4><div id="npxready"></div></div>
     <p class="note" style="margin-top:12px">Each download is a small zip with the file already set to your token, a README with every step, and an AGENTS.md so any AI tool can change it for you.</p>
     <p class="note" style="margin-top:8px"><b>Wallet button not working on the downloaded file?</b> Wallet extensions skip files opened from your computer. Open <code>chrome://extensions</code> → <b>Details</b> under MetaMask or Rabby → turn on <b>Allow access to file URLs</b> → reload. Or drag the folder onto <a href="https://app.netlify.com/drop" target="_blank" rel="noopener">Netlify Drop</a> and open the link.</p>
   </section>
@@ -99,6 +101,18 @@
     <h2>Recipes</h2>
     <p class="lead">Copy, paste into your AI (set up as above), change the bits in [brackets]. Each one ends in a working app.</p>
     <div class="recipes" id="rec"></div>
+  </section>
+
+  <section class="sec" id="dev">
+    <h2>For developers: npx vibevibekit</h2>
+    <p class="lead">The same toolkit on npm. Needs only <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a>, nothing to install first.</p>
+    <div id="devcmds"></div>
+    <p class="note" style="margin-top:14px">In your own code (Node or a bundler): <code>npm i vibevibekit</code></p>
+    <div class="code">import { tokenInfo, recentTrades, topHolders, quoteBuy, buyWithEth, fmtPrice } from "vibevibekit";
+
+const t = await tokenInfo("0x…");
+console.log(t.symbol, fmtPrice(t.price), Math.round(t.progress * 100) + "% to graduation");<button data-copy>copy</button></div>
+    <p class="note" style="margin-top:10px"><a href="https://www.npmjs.com/package/vibevibekit" target="_blank" rel="noopener">npm</a> · <a href="https://github.com/0xnesQuit/vibekit" target="_blank" rel="noopener">source on GitHub</a> · MIT</p>
   </section>
 
   <section class="sec">
@@ -246,7 +260,18 @@ const TABS = {
       <li>If your tool supports MCP servers over HTTP, add:${copyBlock(URL_)}</li></ol>`,
 };
 let tabNow = "ChatGPT";
+function renderDev() {
+  const t = TOKEN || "0xYOUR_TOKEN";
+  $("npxready").innerHTML = copyBlock(`npx vibevibekit new token-page --token ${t}`) + `<p class="note" style="margin-top:6px">or <code>token-gate</code>, <code>buy-bot</code> instead of <code>token-page</code></p>`;
+  $("devcmds").innerHTML = [
+    ["starter folder your AI already understands (AGENTS.md, CLAUDE.md, MCP configs, START.md)", `npx vibevibekit init --token ${t}`],
+    ["a ready-made app set to your token", `npx vibevibekit new token-page --token ${t}`],
+    ["live token info as JSON", `npx vibevibekit token ${t}`],
+    ["the vibekit MCP server, running locally (stdio)", "npx vibevibekit mcp"],
+  ].map(([what, cmd]) => `<p class="note" style="margin:14px 0 6px">${what}</p>` + copyBlock(cmd)).join("");
+}
 function renderTabs() {
+  renderDev();
   const ORDER = ["ChatGPT", "Claude", "DeepSeek", "Claude Code", "Codex", "Cursor", "Gemini CLI", "VS Code", "Windsurf", "Other AI"];
   $("tabs").innerHTML = ORDER.filter(k => TABS[k]).map(k => `<button class="${k === tabNow ? "on" : ""}" data-tab="${k}">${k}</button>`).join("");
   $("tab").innerHTML = TABS[tabNow](); const z = $("starterzip"); if (z) z.onclick = starterZip;
