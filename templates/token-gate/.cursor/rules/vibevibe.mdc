@@ -320,7 +320,7 @@ do not poll faster than every few seconds.
 | `/sparklines?tokens=<t1>,<t2>` | small price series |
 | `/market/quote-usd-rates`, `/v6/pair-prices` | USD rates for pair currencies |
 
-Images: `ipfs://<cid>` -> `https://ipfs.io/ipfs/<cid>` (or any IPFS gateway).
+Images: `ipfs://<cid>` -> `https://ipfs.filebase.io/ipfs/<cid>`. Public gateways often answer 429 (too many requests), so in a page try several in turn on `<img onerror>`: filebase, `gateway.pinata.cloud`, `ipfs.io`, `dweb.link`. Do not use `testnet.vibevibe.fun/media/<cid>.webp`: it blocks other sites.
 
 ## 8. Rules for the assistant
 

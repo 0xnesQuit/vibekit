@@ -134,6 +134,20 @@ function fmtPrice(p) {
   return "0.0" + sub + Math.round(p * 10 ** (z + 3));
 }
 const short = a => a.slice(0, 6) + "…" + a.slice(-4);
+// Token logos live on IPFS. Public gateways often refuse busy users (HTTP 429), so try several in turn.
+// (testnet.vibevibe.fun/media/<cid>.webp only works on vibe/vibe itself: it blocks other sites.)
+const IPFS_GATEWAYS = ["https://ipfs.filebase.io/ipfs/", "https://gateway.pinata.cloud/ipfs/", "https://ipfs.io/ipfs/", "https://dweb.link/ipfs/"];
+function ipfsUrls(uri) {
+  const m = /^ipfs:\/\/(.+)$/.exec(uri || "") || /\/ipfs\/([^?#]+)/.exec(uri || "");
+  return m ? IPFS_GATEWAYS.map(g => g + m[1]) : uri ? [uri] : [];
+}
+// <img> that falls back to the next gateway when one fails; onFail runs when none work
+function loadImage(img, uri, onFail) {
+  const urls = ipfsUrls(uri); let i = 0;
+  if (!urls.length) return onFail && onFail();
+  img.onerror = () => { if (++i < urls.length) img.src = urls[i]; else { img.onerror = null; onFail && onFail(); } };
+  img.src = urls[0];
+}
 const ago = sec => { const s = Date.now() / 1000 - sec; return s < 60 ? Math.max(1, Math.round(s)) + "s ago" : s < 3600 ? Math.round(s / 60) + "m ago" : s < 86400 ? Math.round(s / 3600) + "h ago" : Math.round(s / 86400) + "d ago"; };
 
 // ---------- the token ----------
@@ -266,7 +280,6 @@ async function sellTokens({ wallet, account }, info, tokens, slippagePercent = 5
 
 
 const C = window.CONFIG, $ = id => document.getElementById(id), esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const ipfs = u => u && u.startsWith("ipfs://") ? "https://ipfs.io/ipfs/" + u.slice(7) : u;
 document.documentElement.style.setProperty("--accent", C.accent || "#dff902");
 
 if (!/^0x[0-9a-fA-F]{40}$/.test(C.token || "")) {
@@ -279,13 +292,13 @@ let info;
 try { info = await tokenInfo(C.token); }
 catch (e) { $("app").innerHTML = `<div class="err"><h2>Could not load this token</h2><p style="margin-top:8px">${esc(e.message)}</p></div>`; throw e; }
 
-const title = C.title || info.name, img = ipfs(C.image);
+const title = C.title || info.name, img = C.image;
 document.title = `${title} ($${info.symbol})`;
 const linkBtn = (url, label) => url ? `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${label}</a>` : "";
 const showBuy = C.buyBox && info.pairIsEth && !info.complete;
 $("app").innerHTML = `
   <div class="hero">
-    ${img ? `<img class="logo" src="${esc(img)}" alt="">` : `<div class="logo">${esc(info.symbol.slice(0, 2))}</div>`}
+    ${img ? `<img class="logo" id="logo" alt="">` : `<div class="logo">${esc(info.symbol.slice(0, 2))}</div>`}
     <div>
       <h1>${esc(title)}</h1><span class="sym">$${esc(info.symbol)}</span>
       ${C.tagline ? `<p class="tag">${esc(C.tagline)}</p>` : ""}
@@ -312,6 +325,7 @@ $("app").innerHTML = `
     </div>
   </div>
   <footer>Robinhood Chain testnet. Nothing here has real value. Made with <a href="https://vibercheck.xyz/build" target="_blank" rel="noopener">vibekit</a>.</footer>`;
+if (img) loadImage($("logo"), img, () => { const d = document.createElement("div"); d.className = "logo"; d.textContent = info.symbol.slice(0, 2); $("logo").replaceWith(d); });
 
 $("ca").onclick = () => navigator.clipboard.writeText(info.token).then(() => { $("ca").firstElementChild.textContent = "copied!"; setTimeout(() => $("ca").firstElementChild.textContent = info.token, 1200); });
 

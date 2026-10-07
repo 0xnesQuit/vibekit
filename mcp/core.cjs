@@ -33,7 +33,7 @@ function parseUnits(x, dec = 18) {   // decimal string -> bigint
   return BigInt((m[1] || "0") + (m[2] || "").padEnd(dec, "0").slice(0, dec));
 }
 const short = n => { const x = Number(n); return Math.abs(x) >= 1e6 ? (x / 1e6).toFixed(2) + "M" : Math.abs(x) >= 1e3 ? (x / 1e3).toFixed(2) + "K" : x >= 1 ? x.toFixed(4) : x.toPrecision(4); };
-const ipfs = uri => uri && uri.startsWith("ipfs://") ? "https://ipfs.io/ipfs/" + uri.slice(7) : uri || null;
+const ipfs = uri => uri && uri.startsWith("ipfs://") ? "https://ipfs.filebase.io/ipfs/" + uri.slice(7) : uri || null;
 const links = token => ({ vibevibe: `${SITE}/token/${token}`, explorer: `${EXPLORER}/token/${token}` });
 
 async function rpc(method, params) {

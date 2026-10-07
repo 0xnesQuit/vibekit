@@ -120,6 +120,20 @@ function fmtPrice(p) {
   return "0.0" + sub + Math.round(p * 10 ** (z + 3));
 }
 const short = a => a.slice(0, 6) + "…" + a.slice(-4);
+// Token logos live on IPFS. Public gateways often refuse busy users (HTTP 429), so try several in turn.
+// (testnet.vibevibe.fun/media/<cid>.webp only works on vibe/vibe itself: it blocks other sites.)
+const IPFS_GATEWAYS = ["https://ipfs.filebase.io/ipfs/", "https://gateway.pinata.cloud/ipfs/", "https://ipfs.io/ipfs/", "https://dweb.link/ipfs/"];
+function ipfsUrls(uri) {
+  const m = /^ipfs:\/\/(.+)$/.exec(uri || "") || /\/ipfs\/([^?#]+)/.exec(uri || "");
+  return m ? IPFS_GATEWAYS.map(g => g + m[1]) : uri ? [uri] : [];
+}
+// <img> that falls back to the next gateway when one fails; onFail runs when none work
+function loadImage(img, uri, onFail) {
+  const urls = ipfsUrls(uri); let i = 0;
+  if (!urls.length) return onFail && onFail();
+  img.onerror = () => { if (++i < urls.length) img.src = urls[i]; else { img.onerror = null; onFail && onFail(); } };
+  img.src = urls[0];
+}
 const ago = sec => { const s = Date.now() / 1000 - sec; return s < 60 ? Math.max(1, Math.round(s)) + "s ago" : s < 3600 ? Math.round(s / 60) + "m ago" : s < 86400 ? Math.round(s / 3600) + "h ago" : Math.round(s / 86400) + "d ago"; };
 
 // ---------- the token ----------
