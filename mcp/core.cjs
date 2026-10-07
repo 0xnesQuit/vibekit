@@ -65,7 +65,7 @@ async function live(token) {   // live state straight from the contracts
     curveComplete: done, graduated: u(words(unlocked)[0]) === 1n, transfersLocked: u(words(unlocked)[0]) !== 1n,
     graduationProgressPercent: done ? 100 : Math.round(Number(u(raised[0])) / Number(u(target[0])) * 10000) / 100,
     raised: units(u(raised[0])), target: units(u(target[0])), taxNowPercent: Number(u(rate[0])) / 100, baseTaxPercent: Number(u(words(base)[0])) / 100,
-    taxSplitPercent: { projectTreasury: Number(w & 0xffffn) / 100, holders: Number((w >> 16n) & 0xffffn) / 100, burn: Number((w >> 32n) & 0xffffn) / 100, holdersInPair: Number((w >> 48n) & 0xffffn) / 100 },
+    taxSplitPercent: { projectTreasury: Number(w & 0xffffn) / 100, holders: Number((w >> 16n) & 0xffffn) / 100, burn: Number((w >> 32n) & 0xffffn) / 100, holdersInPair: Number((w >> 48n) & 0xffffn) / 100 }, taxSplitNote: "taxSplitPercent divides the project's 80% of the tax; the protocol always gets the other 20% (in the pair currency).",
     pricePerToken: price, priceUnit: pairAddr === ZERO ? "ETH" : "pair token" };
 }
 const compactLaunch = l => l && ({ token: l.tokenAddress, curve: l.curveAddress, name: l.name, symbol: l.symbol, pair: l.pairSymbol, lifecycle: l.lifecycle, graduated: l.graduated,

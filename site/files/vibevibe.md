@@ -19,7 +19,8 @@ This is a **testnet**: test ETH and test tokens have no real value. Never ask fo
 | RPC | `https://rpc.testnet.chain.robinhood.com` (works from browsers, CORS allowed) |
 | Explorer | `https://explorer.testnet.chain.robinhood.com` (Blockscout) |
 | Native currency | ETH (18 decimals), test ETH only |
-| Free test ETH | `https://testnet.vibevibe.fun/faucet` |
+| Free test ETH | `https://faucet.testnet.chain.robinhood.com` (official Robinhood Chain faucet) |
+| Official docs | `https://testnet.vibevibe.fun/docs/` (safety page lists every official link) |
 | Block time | well under a second, so block numbers grow fast; read logs in ranges of at most 5,000 blocks |
 
 ```js
@@ -72,15 +73,23 @@ Get one from the other: `factory.curveOf(token)` and `curve.token()`. Links for 
 ## 3. How a token works (lifecycle)
 
 1. **Launch.** Anyone creates a token on vibe/vibe. The factory emits `LaunchCreated`. Creation fee: read
-   `factory.creationFee()` (currently 0.0004 ETH). Supply is always 1,000,000,000 tokens (18 decimals).
+   `factory.creationFee()` (currently 0.0004 ETH). Supply is always 1,000,000,000 tokens (18 decimals): 800 million
+   are sold on the curve, 200 million become graduated liquidity. The creator picks the pair, the tax (1%, 2% or 3%),
+   the tax split and an optional graduation airdrop at creation; none of it can change later. The creator's opening
+   buy plus the airdrop allocation can't exceed 50% of supply. Project types in the create form: Meme & Artcoins,
+   Product & Utility, RWA & Stocks. Stock pairs on testnet are stock-labeled test assets with no value, not shares.
 2. **Curve trading** (`lifecycle = CURVE_TRADING`). People buy and sell on the bonding curve. The price rises as
    tokens are bought. **Transfers between wallets are locked**: holders can only buy and sell, not send tokens.
    Any `transfer` reverts with `TransfersLocked()`. So: no airdrops, no sending tokens to friends, no adding liquidity
    elsewhere, until graduation.
-3. **Complete.** When the curve's target is reached, `curve.complete()` becomes `true`. Curve trading stops
-   (`CurveClosed()`). Graduation is permissionless: anyone can trigger it.
+3. **Complete = graduation.** For V6, graduation happens inside the buy that reaches the target: `curve.complete()`
+   becomes `true`, curve trading stops (`CurveClosed()`), and the liquidity goes to the pool in the same transaction.
 4. **Graduated** (`lifecycle = GRADUATED`). Liquidity moves to a Uniswap v4 pool (PoolManager above, with the vibe/vibe
-   hook). `token.transfersUnlocked()` becomes `true` and the token is a normal ERC-20 from then on.
+   hook). The pool liquidity is locked forever. `token.transfersUnlocked()` becomes `true` and the token is a normal
+   ERC-20 from then on. A configured graduation airdrop starts its distribution at this point.
+
+A token that never reaches its target has no refund, expiry or guaranteed graduation; holders can only sell on the
+curve (with tax and price impact). Older V2/V3/V5 tokens (1.25% fee, 5 ETH target) keep their own rules.
 
 **Pair currency.** A token is priced in ETH or in another token. `curve.pairCurrency()` returns
 `0x0000000000000000000000000000000000000000` for ETH, otherwise the pair token (often VIBEVIBE).
@@ -91,10 +100,13 @@ All "pair" amounts below are in that currency's units (18 decimals).
 
 ## 4. Tax and holder rewards
 
-- Every curve trade pays a tax. Base rate: `token.baseTaxBps()` (usually 200 = 2%).
-- Right after launch the rate is much higher (anti-sniping) and falls back to the base over time. Always read the
-  live rate with `curve.currentRateBps()` before buying (a brand new token showed 6020 = 60%).
-- The tax is split four ways, packed in `token.packedWeights()` (each share in basis points, adding up to 10000):
+- Every trade (buy and sell) pays one tax. Base rate: `token.baseTaxBps()`: 100, 200 or 300 (1%, 2%, 3%), set at launch.
+- Opening tax: for the first 20 seconds after launch, curve **buys** pay a rate that falls from 99% to the base rate
+  (anti-sniping; sells and the creator's opening buy are exempt). Always read the live rate with
+  `curve.currentRateBps()` before buying.
+- Split of the tax: **80% project share, 20% protocol**. The protocol's 20% is paid in the pair currency (for ETH it
+  goes to the buyback sink, which buys and burns VIBEVIBE once that route is active). The project's 80% is divided by
+  the creator's weights, packed in `token.packedWeights()` (each share in basis points of the project share, adding up to 10000):
   ```js
   const w = await token.read.packedWeights();          // uint64
   const split = { cash: Number(w & 0xffffn),            // to the project treasury
@@ -103,9 +115,13 @@ All "pair" amounts below are in that currency's units (18 decimals).
     holdersPair: Number((w >> 48n) & 0xffffn) };        // to holders, paid in the pair currency
   ```
 - Holders earn rewards automatically. Read them on the **token**: `pendingReward(holder)` (in the token) and
-  `pendingPairReward(holder)` (in the pair currency). Users can claim on vibe/vibe's Reflections page.
-- On top of the token tax, vibe/vibe takes a platform fee in the pair currency (`pairFee` in quotes and events). The
-  quote functions below already include every fee, so always quote right before trading instead of computing prices yourself.
+  `pendingPairReward(holder)` (in the pair currency). Pair-currency rewards can be collected on the curve or after
+  graduation; token rewards become claimable after graduation. Users claim on vibe/vibe's Reflections page.
+- How a quote shows the tax: the token-denominated parts (holder rewards in the token, burn) come off the tokens
+  (`gross - net`), the pair-currency parts (protocol, treasury, holder rewards in the pair) are `pairFee`. Together they
+  are the whole tax, not a fee on top of it. Example, 2% tax: 1.28% in tokens + 0.72% in ETH. A token paired with
+  another graduated vibe/vibe token also pays that token's pool tax when routed through it. The quote functions below
+  include everything, so always quote right before trading instead of computing prices yourself.
 
 ## 5. Contract functions (verified on chain)
 
