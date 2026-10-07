@@ -1,33 +1,56 @@
 {
-  "name": "vibekit",
-  "version": "1.0.0",
-  "description": "Build on vibe/vibe (Robinhood Chain testnet) with AI: one-file templates, an AGENTS.md that teaches any AI vibe/vibe, and an MCP server with live data.",
-  "main": "mcp/core.cjs",
-  "scripts": {
-    "sync": "node tools/sync.cjs",
-    "mcp": "node mcp/stdio.cjs",
-    "verify": "node research/verify.mjs && node research/snippets_test.mjs"
-  },
+  "name": "vibevibekit",
+  "version": "0.1.0",
+  "description": "Build on vibe/vibe (Robinhood Chain testnet) with AI: starter folders for any AI tool, ready-made token apps, a JS SDK and the vibekit MCP server.",
   "keywords": [
     "vibevibe",
     "robinhood-chain",
     "mcp",
     "ai",
     "agents",
-    "web3"
+    "web3",
+    "sdk",
+    "viem",
+    "cli"
   ],
   "author": "@0xHaileyy",
   "license": "MIT",
-  "devDependencies": {
-    "viem": "^2.57.3",
-    "@modelcontextprotocol/sdk": "^1.32.1"
-  },
-  "bin": {
-    "vibekit-mcp": "mcp/stdio.cjs"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/0xnesQuit/vibekit"
+  },
+  "homepage": "https://vibercheck.xyz/build",
+  "bin": {
+    "vibevibekit": "bin/vibevibekit.cjs"
+  },
+  "type": "commonjs",
+  "main": "mcp/core.cjs",
+  "exports": {
+    ".": "./sdk/index.mjs",
+    "./mcp": "./mcp/core.cjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin/",
+    "sdk/",
+    "mcp/",
+    "context/",
+    "templates/token-page/",
+    "templates/token-gate/",
+    "templates/buy-bot/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "sync": "node tools/sync.cjs",
+    "mcp": "node mcp/stdio.cjs",
+    "verify": "node research/verify.mjs && node research/snippets_test.mjs"
+  },
+  "dependencies": {
+    "viem": "^2.57.3"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1"
   },
   "engines": {
     "node": ">=18"

@@ -139,7 +139,7 @@ async function useToken(addr) {
     $("tokinfo").innerHTML = `✅ <b>${esc(INFO.name)}</b> ($${esc(INFO.symbol)}) · paired with ${INFO.pairIsEth ? "ETH" : "a token"} · ${INFO.graduated ? "graduated" : INFO.graduationProgressPercent + "% to graduation"} · tax now ${INFO.taxNowPercent}%`;
     if (!$("tp_title").value) $("tp_title").placeholder = INFO.name;
   } catch (e) { TOKEN = null; INFO = null; $("tokinfo").textContent = "could not load it: " + e.message; }
-  renderStarter(); renderRecipes();
+  renderStarter(); renderRecipes(); renderTabs();
 }
 $("load").onclick = () => useToken($("tok").value);
 $("tok").onkeydown = e => { if (e.key === "Enter") useToken($("tok").value); };
@@ -200,6 +200,7 @@ const TABS = {
       <li>${starterBtn} and unzip it. It already has <b>CLAUDE.md</b> (the vibe/vibe file) and <b>.mcp.json</b> (the vibekit connection).</li>
       <li>Open a terminal in that folder and run <b>claude</b>. Approve the vibekit server when asked.</li>
       <li>Paste the first message below.</li></ol>
+    <div class="alt"><h4>Have Node.js? One command makes the starter folder</h4>${copyBlock(`npx vibevibekit init${TOKEN ? " --token " + TOKEN : ""}`)}</div>
     <div class="alt"><h4>Add vibekit to every project instead</h4>${copyBlock(`claude mcp add --transport http vibekit ${URL_}`)}</div>`,
   "Codex": () => `<ol>
       <li>${starterBtn} and unzip it. It has <b>AGENTS.md</b>, which Codex reads automatically.</li>

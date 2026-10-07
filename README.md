@@ -14,6 +14,13 @@ vibekit gives you three things:
 👉 **Easiest start: [vibercheck.xyz/build](https://vibercheck.xyz/build)**. Paste your token, download, or follow the
 step by step setup for your AI tool. Everything below is the same thing for people who like GitHub.
 
+**Prefer the terminal?** One command, needs only [Node.js](https://nodejs.org):
+
+```
+npx vibevibekit init --token 0xYOUR_TOKEN           # starter folder for any AI tool
+npx vibevibekit new token-page --token 0xYOUR_TOKEN # or token-gate, buy-bot
+```
+
 ---
 
 ## 1. Ready-made apps
@@ -80,7 +87,7 @@ Tools it gives your AI (all read-only; nothing is ever signed or sent for you):
 | `build_trade_transaction` | an **unsigned** testnet transaction for the user to sign in their own wallet |
 | `list_guilds`, `get_guild` | guild ranking and details from vibercheck |
 
-Prefer running it yourself (stdio)? `node mcp/stdio.cjs`, no dependencies. Or mount `mcp/http.cjs` on any Node server.
+Prefer running it yourself (stdio)? `npx vibevibekit mcp`, or `node mcp/stdio.cjs` from this repo. Or mount `mcp/http.cjs` on any Node server.
 
 ## 3. Recipes
 
@@ -90,6 +97,24 @@ Prefer running it yourself (stdio)? `node mcp/stdio.cjs`, no dependencies. Or mo
 ---
 
 ## For developers
+
+**npm package [`vibevibekit`](https://www.npmjs.com/package/vibevibekit)**: a CLI, a JS SDK and the MCP server.
+
+```
+npx vibevibekit init [folder] [--token 0x...]          starter folder: AGENTS.md, CLAUDE.md, MCP configs, START.md
+npx vibevibekit new token-page|token-gate|buy-bot [folder] --token 0x...
+npx vibevibekit token 0x...                             live token info (JSON)
+npx vibevibekit mcp                                     vibekit MCP server over stdio
+```
+
+```js
+import { tokenInfo, recentTrades, topHolders, quoteBuy, buyWithEth, sellTokens, fmtPrice } from "vibevibekit";
+const t = await tokenInfo("0x4A84161B6Bc6De966b36BFDEaA3b5c3d161cb73b");
+console.log(t.symbol, fmtPrice(t.price), Math.round(t.progress * 100) + "% to graduation");
+```
+
+`buyWithEth` / `sellTokens` take `{ wallet, account }`: a viem wallet client (`connectWallet()` in a browser, or your own
+`createWalletClient` in Node).
 
 - [`templates/_shared/vibe.js`](templates/_shared/vibe.js): a small browser module (viem from a CDN) with `tokenInfo`,
   `recentTrades`, `watchTrades`, `topHolders`, `connectWallet`, `quoteBuy`, `buyWithEth`, `sellTokens`.

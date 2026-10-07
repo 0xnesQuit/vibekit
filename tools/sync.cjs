@@ -30,6 +30,10 @@ for (const f of fs.readdirSync(path.join(TPL, "_src")).filter(f => f.endsWith(".
 for (const dir of targets) for (const [rel, body] of Object.entries(files)) {
   const f = path.join(dir, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, body);
 }
+// the npm package (vibevibekit): the same helpers for Node and bundlers, with viem from npm instead of a CDN
+fs.mkdirSync(path.join(ROOT, "sdk"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "sdk", "index.mjs"), "// generated from templates/_shared/vibe.js by tools/sync.cjs, edit that file instead\n" +
+  fs.readFileSync(path.join(TPL, "_shared", "vibe.js"), "utf8").replace('"https://esm.sh/viem@2.57.3"', '"viem"'));
 // the hosted MCP server bundles the same file
 fs.copyFileSync(path.join(ROOT, "context", "vibevibe.md"), path.join(ROOT, "mcp", "vibevibe.md"));
 console.log(`synced into ${targets.length} folders`);
