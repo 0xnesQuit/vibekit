@@ -167,7 +167,10 @@ export const balanceOf = (token, wallet) => read(token, tokenAbi, "balanceOf", [
 
 // ---------- wallet ----------
 // asks MetaMask / Rabby / any browser wallet to connect and switch to Robinhood Chain testnet
+// wallet extensions skip pages opened by double click (file://) until the user allows it
+export const FILE_WALLET_HELP = "Your wallet can't see pages opened from your computer. Fix: open chrome://extensions, click Details under MetaMask (or Rabby), turn on \"Allow access to file URLs\", then reload this page. Or put the page online with Netlify Drop (app.netlify.com/drop).";
 export async function connectWallet() {
+  if (!window.ethereum && location.protocol === "file:") throw new Error(FILE_WALLET_HELP);
   if (!window.ethereum) throw new Error("No wallet found. Install MetaMask or Rabby, then reload this page.");
   const [account] = await window.ethereum.request({ method: "eth_requestAccounts" });
   try { await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0xb626" }] }); }

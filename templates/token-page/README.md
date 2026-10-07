@@ -17,6 +17,12 @@ One file, no install.
 
 Double click `index.html`. It opens in your browser and loads everything from Robinhood Chain.
 
+**Want to use the Buy / Connect wallet button?** Wallet extensions don't work on files opened from your computer
+until you allow it. Pick one:
+- Quick: open `chrome://extensions`, click **Details** under MetaMask (or Rabby), turn on **Allow access to file URLs**,
+  reload the page.
+- Or put the page online (next step) and open the link. Everything works there.
+
 ## 3. Put it online (free)
 
 Any of these work, pick one:

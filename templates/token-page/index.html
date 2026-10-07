@@ -240,7 +240,10 @@ const balanceOf = (token, wallet) => read(token, tokenAbi, "balanceOf", [wallet]
 
 // ---------- wallet ----------
 // asks MetaMask / Rabby / any browser wallet to connect and switch to Robinhood Chain testnet
+// wallet extensions skip pages opened by double click (file://) until the user allows it
+const FILE_WALLET_HELP = "Your wallet can't see pages opened from your computer. Fix: open chrome://extensions, click Details under MetaMask (or Rabby), turn on \"Allow access to file URLs\", then reload this page. Or put the page online with Netlify Drop (app.netlify.com/drop).";
 async function connectWallet() {
+  if (!window.ethereum && location.protocol === "file:") throw new Error(FILE_WALLET_HELP);
   if (!window.ethereum) throw new Error("No wallet found. Install MetaMask or Rabby, then reload this page.");
   const [account] = await window.ethereum.request({ method: "eth_requestAccounts" });
   try { await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0xb626" }] }); }
@@ -365,7 +368,7 @@ if (showBuy) {
       msg.textContent = "confirm in your wallet…";
       const hash = await buyWithEth(conn, info, $("amt").value.trim());
       msg.innerHTML = `bought! <a href="${EXPLORER}/tx/${hash}" target="_blank" rel="noopener">see the transaction ↗</a>`;
-    } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 160); }
+    } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 400); }
     finally { $("go").disabled = false; }
   };
 }

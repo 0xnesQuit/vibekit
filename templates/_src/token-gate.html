@@ -89,7 +89,7 @@ $("go").onclick = async () => {
         <p class="msg">${info.graduated ? "" : "Before graduation tokens can only be bought, not sent between wallets, so get them on vibe/vibe."} Then come back and check again.</p>`;
       $("go").textContent = "Check again"; $("go").className = "btn ghost";
     }
-  } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 160); }
+  } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 400); }
   finally { const g = $("go"); if (g) g.disabled = false; }
 };
 </script>

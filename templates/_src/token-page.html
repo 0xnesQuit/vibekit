@@ -158,7 +158,7 @@ if (showBuy) {
       msg.textContent = "confirm in your wallet…";
       const hash = await buyWithEth(conn, info, $("amt").value.trim());
       msg.innerHTML = `bought! <a href="${EXPLORER}/tx/${hash}" target="_blank" rel="noopener">see the transaction ↗</a>`;
-    } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 160); }
+    } catch (e) { msg.style.color = "var(--dn)"; msg.textContent = (e.shortMessage || e.message || String(e)).slice(0, 400); }
     finally { $("go").disabled = false; }
   };
 }

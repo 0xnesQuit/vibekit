@@ -12,6 +12,12 @@ One file, no install.
 4. Write what holders see in `members`. Plain text works; links and images work too (it's HTML).
 5. Save, double click `index.html` to try it with your wallet.
 
+**Want to use the wallet button (you need it here)?** Wallet extensions don't work on files opened from your computer
+until you allow it. Pick one:
+- Quick: open `chrome://extensions`, click **Details** under MetaMask (or Rabby), turn on **Allow access to file URLs**,
+  reload the page.
+- Or put the page online (below) and open the link. Everything works there.
+
 ## 2. Put it online (free)
 
 Same as any web page: drag the folder onto [app.netlify.com/drop](https://app.netlify.com/drop), or use GitHub Pages / Vercel.

@@ -288,6 +288,22 @@ live tax (`currentRateBps`). Keep test amounts small.
 </script>
 ```
 
+**Wallets and double-clicked files.** Chrome wallet extensions (MetaMask, Rabby...) do not run on pages opened from the
+computer (`file://...`) unless the user turns that on, so `window.ethereum` is missing there. Reading data still works.
+If `!window.ethereum && location.protocol === "file:"`, show this instead of "install a wallet": open
+`chrome://extensions`, click **Details** under the wallet, turn on **Allow access to file URLs**, reload the page.
+Or put the page online: drag the folder onto https://app.netlify.com/drop and open the link it gives.
+
+**Show prices without `e-9`.** Token prices are tiny; never show `1.745e-9`. Use this:
+```js
+function fmtPrice(p) { // 0.00000000175 -> "0.0₈175"
+  if (!p) return "0"; if (p >= 0.001) return p.toLocaleString("en-US", { maximumFractionDigits: 4 });
+  const z = Math.floor(-Math.log10(p)), sub = String(z).split("").map(d => "₀₁₂₃₄₅₆₇₈₉"[d]).join("");
+  return "0.0" + sub + Math.round(p * 10 ** (z + 3));
+}
+```
+Format amounts with `toLocaleString("en-US")` so every user sees the same separators.
+
 ## 7. Data without contracts
 
 **Explorer API** (Blockscout, works from browsers):
@@ -296,6 +312,11 @@ live tax (`currentRateBps`). Keep test amounts small.
   (holds the reflected holder rewards), the PoolManager `0x8366…0951` (pool liquidity after graduation) and
   `0x000000000000000000000000000000000000dEaD` (burned tokens).
 - Token transfers, transactions, addresses: `/api/v2/tokens/<token>/transfers`, `/api/v2/addresses/<address>/transactions`.
+- **Latest trades in a browser, in one request:** `GET /api/v2/addresses/<curve>/logs` returns the curve's events newest
+  first (`items[].topics`, `data`, `transaction_hash`, `block_timestamp`; `next_page_params` for older ones). Buys have
+  `topics[0] == 0x55867fe9a84ea30ad247ef1bb703eba47fd9af476149002512a2814b1e3d8fb5` (CurveBuy), sells
+  `0x3899b2b9ba4dfe77b54ff5e6f921672b2a7563ade468f2a106b25a4b808d60de` (CurveSell). Decode with viem `decodeEventLog`.
+  `topics[2]` is the recipient = the real wallet. Much faster than scanning `getLogs` 5,000 blocks at a time.
 
 **vibe/vibe REST API** (rich data, but **server-side only**: requests from other websites' browsers are blocked with
 403, so call it from Node, a bot, a serverless function or an MCP server, never from browser JavaScript on your own site).
@@ -324,6 +345,9 @@ Images: `ipfs://<cid>` -> `https://ipfs.filebase.io/ipfs/<cid>`. Public gateways
 - Use only the addresses, functions and endpoints in this file. If unsure, read the chain to check.
 - Default to **viem** (JavaScript). For web pages with no build step, import from `https://esm.sh/viem@2`.
 - Give complete, runnable files and tell the user exactly how to run them (which command, which file to open).
+- For a web page with a wallet button, tell the user how to make the wallet work: Netlify Drop, or "Allow access to file
+  URLs" in the wallet's extension details (see section 6). Show friendly messages, never a blank page or raw error.
+- Show prices with `fmtPrice` (section 6), never in `e-9` notation.
 - Never put a private key in a web page or commit it. Bots read keys from a `.env` file that is never shared.
 - Amounts are integers in base units (18 decimals): use `parseEther`/`parseUnits` and `formatUnits`.
 - Before graduation tokens cannot be transferred, airdropped or added to other pools; explain this instead of trying.
