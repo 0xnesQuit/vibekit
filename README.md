@@ -97,7 +97,8 @@ Prefer running it yourself (stdio)? `node mcp/stdio.cjs`, no dependencies. Or mo
 
 How the facts were checked: the V6 deployment and ABIs come from the public vibe/vibe web app and were verified by
 calling every function on Robinhood Chain testnet (`research/verify*.mjs`, `research/snippets_test.mjs`) and by matching
-function selectors and event topics against real transactions.
+function selectors and event topics against real transactions. The buy and sell code and the MCP's unsigned
+transactions were tested with real testnet trades (`research/write_test.mjs`).
 
 ## Good to know
 
