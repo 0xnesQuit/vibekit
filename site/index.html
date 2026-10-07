@@ -238,7 +238,8 @@ const TABS = {
 };
 let tabNow = "ChatGPT";
 function renderTabs() {
-  $("tabs").innerHTML = Object.keys(TABS).map(k => `<button class="${k === tabNow ? "on" : ""}" data-tab="${k}">${k}</button>`).join("");
+  const ORDER = ["ChatGPT", "Claude", "DeepSeek", "Claude Code", "Codex", "Cursor", "Gemini CLI", "VS Code", "Windsurf", "Other AI"];
+  $("tabs").innerHTML = ORDER.filter(k => TABS[k]).map(k => `<button class="${k === tabNow ? "on" : ""}" data-tab="${k}">${k}</button>`).join("");
   $("tab").innerHTML = TABS[tabNow](); const z = $("starterzip"); if (z) z.onclick = starterZip;
 }
 $("tabs").onclick = e => { const b = e.target.closest("[data-tab]"); if (b) { tabNow = b.dataset.tab; renderTabs(); } };
