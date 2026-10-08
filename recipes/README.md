@@ -2,6 +2,14 @@
 
 Copy a prompt into your AI (set up with the vibe/vibe file or the vibekit MCP, see the main README), replace the parts in {CURLY_BRACKETS}, and you get a working app.
 
+## No idea yet: from zero to an app with its own token
+
+Your AI suggests ideas, builds the one you pick, prepares the logo and every field for the vibe/vibe launch form, then connects the app to your new token. *(easy)*
+
+```
+I want to build something on vibe/vibe (testnet.vibevibe.fun) with this kit, but I don't have an idea yet. Tell me in two lines what you can do, then give me 3 to 5 ideas for a small app or game with its own token. When I pick one: build it, prepare everything I need to launch its token on vibe/vibe, and connect the two. I am a beginner: tell me exactly what to click and type.
+```
+
 ## A website for my token
 
 A landing page with live price, graduation progress, trades, holders and a buy button. *(easiest)* Or start from the ready-made [`templates/token-page`](../templates/token-page).

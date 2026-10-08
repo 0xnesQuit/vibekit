@@ -75,12 +75,12 @@ const compactLaunch = l => l && ({ token: l.tokenAddress, curve: l.curveAddress,
 const CONTEXT = (() => { for (const p of [path.join(__dirname, "..", "context", "vibevibe.md"), path.join(__dirname, "vibevibe.md")]) { try { return fs.readFileSync(p, "utf8"); } catch (_) { } } return ""; })();
 const SECTIONS = (() => { const out = {}; for (const part of CONTEXT.split(/\n(?=## \d+\. )/)) { const m = part.match(/^## \d+\. ([^\n]+)/); out[m ? m[1].toLowerCase() : "intro"] = part.trim(); } return out; })();
 const TOPIC = { overview: "intro", network: "network", addresses: "addresses (current launchpad = v6)", lifecycle: "how a token works (lifecycle)", tax: "tax and holder rewards",
-  contracts: "contract functions (verified on chain)", code: "ready-made code (viem)", api: "data without contracts", rules: "rules for the assistant" };
+  contracts: "contract functions (verified on chain)", code: "ready-made code (viem)", api: "data without contracts", rules: "rules for the assistant", journey: "from an idea to a launched app and token" };
 
 const tools = [
   { name: "vibevibe_docs", title: "vibe/vibe builder docs",
-    description: "Verified facts and copy-paste code for building on vibe/vibe (Robinhood Chain testnet): network settings, contract addresses, token lifecycle (curve, transfer lock, graduation), tax, every contract function, viem code, and the data APIs. Call this first before writing any vibe/vibe code. topic: overview | network | addresses | lifecycle | tax | contracts | code | api | rules | all",
-    inputSchema: { type: "object", properties: { topic: { type: "string", enum: ["overview", "network", "addresses", "lifecycle", "tax", "contracts", "code", "api", "rules", "all"], default: "all" } } },
+    description: "Verified facts and copy-paste code for building on vibe/vibe (Robinhood Chain testnet): network settings, contract addresses, token lifecycle (curve, transfer lock, graduation), tax, every contract function, viem code, and the data APIs. Call this first before writing any vibe/vibe code. topic: overview | network | addresses | lifecycle | tax | contracts | code | api | rules | journey (idea -> app -> token launch) | all",
+    inputSchema: { type: "object", properties: { topic: { type: "string", enum: ["overview", "network", "addresses", "lifecycle", "tax", "contracts", "code", "api", "rules", "journey", "all"], default: "all" } } },
     run: async ({ topic = "all" }) => topic === "all" ? CONTEXT : (SECTIONS[TOPIC[topic]] || CONTEXT) },
   { name: "search_tokens", title: "Search tokens",
     description: "Find vibe/vibe tokens by name or symbol (newest first). Returns token and curve addresses, pair, lifecycle and links.",

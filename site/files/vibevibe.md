@@ -368,3 +368,45 @@ Images: `ipfs://<cid>` -> `https://ipfs.filebase.io/ipfs/<cid>`. Public gateways
 - Before graduation tokens cannot be transferred, airdropped or added to other pools; explain this instead of trying.
 - Testnet only. Do not describe tokens as investments or promise returns.
 - If a call reverts, decode the error name (section 5) and explain it in plain words.
+
+## 9. From an idea to a launched app and token
+
+Use this when the user wants ideas, or wants to go from nothing to a live app with its own token.
+
+**Step 1: introduce yourself and offer ideas.** When the user asks what they can build (or says they have no idea yet),
+say in two lines what you can do with this kit (build an app, prepare a matching token, connect the two), then offer
+**3 to 5 ideas**. Each idea: a name, one sentence, who it is for, and **why it needs its own token**: what holding,
+buying or the graduation milestone does inside the app (holders unlock levels or perks, a leaderboard of holders, the
+buy button inside the app, the graduation bar as a shared goal, holder rewards from the tax). Keep ideas small enough
+to build as one `index.html` today. Let the user pick one (or mix two). Ask nothing else before building.
+
+**Step 2: build the app** as one `index.html` that works on its own (no token yet). Put the token address in a CONFIG
+block at the top (`token: ""`), so the token features switch on as soon as it is filled in. Before that, the page shows
+"token coming soon" instead of errors. Read live token data with the code in sections 6 and 7.
+
+**Step 3: prepare the launch kit**, a `launch/` folder:
+- `logo.svg`: an original logo you draw as SVG (square, bold, readable at 64 px, no text smaller than the icon,
+  no copyrighted characters or brands). vibe/vibe accepts PNG, JPEG or WebP (not SVG), so also make
+  `launch/logo-to-png.html`: a page that draws `logo.svg` on a 1024x1024 canvas and downloads `logo.png` when opened
+  (inline the SVG in that page so it works by double click).
+- `LAUNCH.md`, everything to copy into the vibe/vibe create form, in the form's order:
+  name (1-64 characters), ticker (1-16, letters and numbers), description (up to 1000 characters: what the app is, who
+  it is for, what holding the token does in the app, and the link once it is online), project type (Meme & Artcoins,
+  Product & Utility, or RWA & Stocks; an app or game is Product & Utility), links (website, X, Telegram, Discord: only
+  ones the user really has), pair (ETH unless the user wants another), tax (1%, 2% or 3%) and how to split the
+  project's 80% share (treasury, holder rewards in the token, holder rewards in ETH, burn) with one line on why,
+  and a small opening buy (or none). Say clearly that pair, tax and split can't be changed after launch.
+- Then the exact steps: open `https://testnet.vibevibe.fun/create`, connect the wallet, fill the form from LAUNCH.md,
+  upload `logo.png`, complete the human check, review the costs, confirm in the wallet, then copy the new token's
+  address from the address bar (`testnet.vibevibe.fun/token/0x...`) and paste it back here.
+
+**The launch itself is done by the user.** vibe/vibe's create form has a human check and the user's own wallet signs
+the transaction. Never try to launch for them, automate that form, or call vibe/vibe's metadata or upload APIs.
+
+**Step 4: connect the app to the token.** When the user pastes the token address, fill it into CONFIG, check it with
+the vibekit tools (`get_token`), and switch on the token features you planned (holder perks via `balanceOf`, a buy
+button, live price and graduation bar). Remember: before graduation the token can be bought and sold but not sent
+between wallets, so never build features that transfer the token.
+
+**Step 5: put it online.** Netlify Drop (drag the folder onto `https://app.netlify.com/drop`), then add the link to the
+token's project page on vibe/vibe and share it. Testnet only: never describe the token as an investment.

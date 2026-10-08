@@ -297,7 +297,7 @@ async function starterZip() {
   d.file(".vscode/mcp.json", JSON.stringify({ servers: { vibekit: { type: "http", url: URL_ } } }, null, 2));
   d.file(".gemini/settings.json", JSON.stringify({ mcpServers: { vibekit: { httpUrl: URL_ } } }, null, 2));
   d.file(".codex/config.toml", `[mcp_servers.vibekit]\nurl = "${URL_}"\n`);
-  d.file("START.md", `# Your vibe/vibe project\n\nOpen this folder in your AI tool (Claude Code, Codex, Cursor, Gemini CLI, VS Code with Copilot, Cline or Roo Code, Windsurf).\nIt already knows vibe/vibe (AGENTS.md) and is connected to live vibe/vibe data (vibekit MCP).\n\nPaste this as your first message:\n\n${starterText()}\n\nSetup help: https://vibercheck.xyz/build\n`);
+  d.file("START.md", `# Your vibe/vibe project\n\nOpen this folder in your AI tool (Claude Code, Codex, Cursor, Gemini CLI, VS Code with Copilot, Cline or Roo Code, Windsurf).\nIt already knows vibe/vibe (AGENTS.md) and is connected to live vibe/vibe data (vibekit MCP).\n\nPaste this as your first message:\n\n${starterText()}\n\nNo idea yet? Paste this instead:\n\nI want to build something on vibe/vibe (testnet.vibevibe.fun) with this kit, but I don't have an idea yet.\nTell me in two lines what you can do, then give me 3 to 5 ideas for a small app or game with its own token.\nWhen I pick one: build it, prepare everything I need to launch its token on vibe/vibe, and connect the two.\nI am a beginner: tell me exactly what to click and type.\n\nSetup help: https://vibercheck.xyz/build\n`);
   const a = document.createElement("a"); a.href = URL.createObjectURL(await zip.generateAsync({ type: "blob" })); a.download = "my-vibevibe-app.zip"; a.click();
   toast("downloaded: unzip and open the folder in your AI tool");
 }

@@ -56,6 +56,13 @@ ${line}
 I am a beginner: give me complete files, and tell me exactly what to click and type to run them.
 What I want: [describe it in your own words]
 
+No idea yet? Paste this instead:
+
+I want to build something on vibe/vibe (testnet.vibevibe.fun) with this kit, but I don't have an idea yet.
+Tell me in two lines what you can do, then give me 3 to 5 ideas for a small app or game with its own token.
+When I pick one: build it, prepare everything I need to launch its token on vibe/vibe, and connect the two.
+I am a beginner: tell me exactly what to click and type.
+
 Setup help: https://vibercheck.xyz/build
 `);
   console.log(`
