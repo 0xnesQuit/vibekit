@@ -106,7 +106,9 @@ All "pair" amounts below are in that currency's units (18 decimals).
   `curve.currentRateBps()` before buying.
 - Split of the tax: **80% project share, 20% protocol**. The protocol's 20% is paid in the pair currency (for ETH it
   goes to the buyback sink, which buys and burns VIBEVIBE once that route is active). The project's 80% is divided by
-  the creator's weights, packed in `token.packedWeights()` (each share in basis points of the project share, adding up to 10000):
+  the creator's weights, packed in `token.packedWeights()` (each share in basis points of the project share, adding up to 10000).
+  The create form shows the same split as % of the whole tax instead (creator shares add up to 80%, platform 20%):
+  form % = weight / 10000 x 80.
   ```js
   const w = await token.read.packedWeights();          // uint64
   const split = { cash: Number(w & 0xffffn),            // to the project treasury
@@ -396,6 +398,9 @@ block at the top (`token: ""`), so the token features switch on as soon as it is
   ones the user really has), pair (ETH unless the user wants another), tax (1%, 2% or 3%) and how to split the
   project's 80% share (treasury, holder rewards in the token, holder rewards in ETH, burn) with one line on why,
   and a small opening buy (or none). Say clearly that pair, tax and split can't be changed after launch.
+  **Write the split the way the form shows it: as % of the whole tax.** The form lists Platform 20% (fixed) and the
+  four creator shares (Treasury, Reflections in the token, Reflections in the pair, Burn), which must add up to
+  **80%**, not 100%. Example: Platform 20, Treasury 24, Reflections token 32, Reflections ETH 16, Burn 8.
 - Then the exact steps: open `https://testnet.vibevibe.fun/create`, connect the wallet, fill the form from LAUNCH.md,
   upload `logo.png`, complete the human check, review the costs, confirm in the wallet, then copy the new token's
   address from the address bar (`testnet.vibevibe.fun/token/0x...`) and paste it back here.
