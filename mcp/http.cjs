@@ -35,6 +35,9 @@ module.exports = async function mcpHttp(req, res) {
     res.statusCode = 400; res.setHeader("Content-Type", "application/json");
     return res.end(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "parse error" } }));
   }
+  if (typeof module.exports.onMessage === "function") {   // optional usage counting by the host (vibercheck counts tool names, no personal data)
+    for (const m of Array.isArray(msg) ? msg : [msg]) { try { module.exports.onMessage(m, req); } catch (_) {} }
+  }
   const out = await handle(msg);
   if (!out) { res.statusCode = 202; return res.end(); }   // notifications only
   res.statusCode = 200; res.setHeader("Content-Type", "application/json"); res.setHeader("Cache-Control", "no-store");

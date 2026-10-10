@@ -34,6 +34,13 @@
   .code button{position:absolute;top:8px;right:8px;height:28px;padding:0 10px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--g1);font:600 12px var(--ui);cursor:pointer}
   .code button:hover{color:var(--lime);border-color:var(--lime)}
   .tag{display:inline-block;font:600 11px var(--mono);padding:3px 8px;border-radius:99px;background:#1b1e21;color:var(--g1);margin-left:6px;vertical-align:2px}
+  .shows{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  .show{display:flex;gap:12px;align-items:flex-start;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);color:var(--g0);text-decoration:none}
+  .show:hover{border-color:var(--lime)} .show img,.show .ph{width:52px;height:52px;border-radius:12px;object-fit:cover;background:#1b1e21;flex:none;display:grid;place-items:center;font:700 16px var(--display);color:var(--lime)}
+  .show b{font-family:var(--display);font-size:17px;display:block} .show small{display:block;color:var(--g1);font-size:13px;margin-top:3px} .show .meta{font:12px var(--mono);color:var(--g2);margin-top:6px}
+  .addshow{margin-top:16px} .addshow summary{cursor:pointer;font-weight:600;color:var(--lime)} .addform{display:grid;gap:10px;margin-top:12px;max-width:560px}
+  .addform label{display:grid;gap:6px;font-size:13px;color:var(--g1)} .addform input{height:44px;border-radius:10px;border:1px solid var(--line);background:#050606;color:var(--g0);font:14px var(--mono);padding:0 12px;outline:0}
+  @media (max-width:860px){.shows{grid-template-columns:1fr}}
   .recipes{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
   .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px} .tools div{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;font-size:14px;color:var(--g1)} .tools b{display:block;color:var(--g0);font-family:var(--mono);font-size:13px;margin-bottom:4px}
   details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:10px} summary{cursor:pointer;font-weight:600} details p{color:var(--g1);margin-top:8px}
@@ -104,6 +111,22 @@
     <div class="recipes" id="rec"></div>
   </section>
 
+  <section class="sec" id="built">
+    <h2>Built with vibekit</h2>
+    <p class="lead">Apps and tokens people made with vibekit. Made one? Add it, it takes ten seconds.</p>
+    <div class="shows" id="shows"><p class="note">loading…</p></div>
+    <details class="addshow"><summary>Add your project</summary>
+      <div class="addform">
+        <label>Token address<input id="sh_tok" placeholder="0x… from testnet.vibevibe.fun/token/0x…" autocomplete="off" spellcheck="false"></label>
+        <label>Link to your app (optional)<input id="sh_url" placeholder="https://…"></label>
+        <label>Your X handle (optional)<input id="sh_x" placeholder="@handle"></label>
+        <label>One line about it (optional)<input id="sh_note" maxlength="140" placeholder="what it is, in one sentence"></label>
+        <button class="btn lime" id="sh_go">Add it</button>
+        <p class="note">Your token shows up right away. Links and the description appear after a quick check, so nobody can post scam links.</p>
+      </div>
+    </details>
+  </section>
+
   <section class="sec" id="dev">
     <h2>For developers: npx vibevibekit</h2>
     <p class="lead">The same toolkit on npm. Needs only <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a>, nothing to install first.</p>
@@ -136,7 +159,9 @@ console.log(t.symbol, fmtPrice(t.price), Math.round(t.progress * 100) + "% to gr
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const MCP_URL = location.origin + "/api/mcp", F = "/build/files/";
+const MCP_URL = location.origin + "/api/mcp?src=build", F = "/build/files/";
+// anonymous usage counters (daily totals per action, nothing personal)
+const vk = e => { try { navigator.sendBeacon("/api/vk?e=" + encodeURIComponent(e)); } catch (_) {} };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 let TOKEN = null, INFO = null;
 const toast = t => { let e = $("toast"); if (!e) { e = document.createElement("div"); e.id = "toast"; e.className = "toast"; document.body.appendChild(e); } e.textContent = t; e.classList.add("on"); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove("on"), 1800); };
@@ -144,7 +169,7 @@ const copyBlock = (text, id) => `<div class="code"${id ? ` id="${id}"` : ""}>${e
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-copy]"); if (!b) return;
   const t = b.parentElement.cloneNode(true); t.querySelector("button").remove();
-  navigator.clipboard.writeText(t.textContent).then(() => toast("copied"));
+  navigator.clipboard.writeText(t.textContent).then(() => toast("copied")); vk("build:copy");
 });
 async function mcp(name, args) {
   const r = await fetch(MCP_URL, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }) }).then(r => r.json());
@@ -190,6 +215,7 @@ document.addEventListener("click", async e => {
   const pv = e.target.closest("[data-pv]"), dl = e.target.closest("[data-dl]"); if (!pv && !dl) return;
   try {
     const kind = (pv || dl).dataset.pv || (pv || dl).dataset.dl, body = await build(kind);
+    vk(`build:${pv ? "pv" : "dl"}:${kind}`);
     if (pv) { const u = URL.createObjectURL(new Blob([body], { type: "text/html" })); window.open(u, "_blank"); return; }
     const zip = new JSZip(), dir = zip.folder(`${kind}-${(INFO && INFO.symbol || "token").toLowerCase()}`);
     dir.file(kind === "buy-bot" ? "bot.js" : "index.html", body);
@@ -277,7 +303,7 @@ function renderTabs() {
   $("tabs").innerHTML = ORDER.filter(k => TABS[k]).map(k => `<button class="${k === tabNow ? "on" : ""}" data-tab="${k}">${k}</button>`).join("");
   $("tab").innerHTML = TABS[tabNow](); const z = $("starterzip"); if (z) z.onclick = starterZip;
 }
-$("tabs").onclick = e => { const b = e.target.closest("[data-tab]"); if (b) { tabNow = b.dataset.tab; renderTabs(); } };
+$("tabs").onclick = e => { const b = e.target.closest("[data-tab]"); if (b) { tabNow = b.dataset.tab; renderTabs(); vk("build:tab:" + tabNow.toLowerCase().replace(/[^a-z0-9]+/g, "-")); } };
 function starterText() {
   return `I want to build something on vibe/vibe (testnet.vibevibe.fun), a token launchpad on Robinhood Chain testnet.
 Use the vibe/vibe file (vibevibe.md / AGENTS.md) and, if you have it, the vibekit tools. Never guess addresses or functions.
@@ -287,6 +313,7 @@ What I want: [describe it in your own words]`;
 }
 function renderStarter() { $("starter").innerHTML = esc(starterText()) + "<button data-copy>copy</button>"; }
 async function starterZip() {
+  vk("build:starter");
   const zip = new JSZip(), d = zip.folder("my-vibevibe-app"), ctx = await getText("vibevibe.md");
   d.file("AGENTS.md", ctx); d.file("CLAUDE.md", "@AGENTS.md\n"); d.file("GEMINI.md", "@./AGENTS.md\n");
   d.file(".cursor/rules/vibevibe.mdc", "---\ndescription: vibe/vibe (Robinhood Chain testnet) facts and code\nalwaysApply: true\n---\n" + ctx);
@@ -315,7 +342,34 @@ fetch(F + "recipes.json?v=1").then(r => r.json()).then(j => { RECIPES = j; rende
 fetch(MCP_URL, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }) }).then(r => r.json())
   .then(j => { $("tools").innerHTML = j.result.tools.map(t => `<div><b>${esc(t.name)}</b>${esc(t.description.split(". ")[0])}.</div>`).join(""); });
 
-renderTabs(); renderStarter();
+renderTabs(); renderStarter(); vk("build:page");
+// ---------- built with vibekit ----------
+const IPFS_GW = ["https://ipfs.filebase.io/ipfs/", "https://gateway.pinata.cloud/ipfs/", "https://ipfs.io/ipfs/"];
+function logoInto(img, uri) {
+  const m = /\/ipfs\/([^?#]+)/.exec(uri || "") || /^ipfs:\/\/(.+)$/.exec(uri || ""); if (!m) return;
+  let done = false; for (const g of IPFS_GW) { const p = new Image(); p.onload = () => { if (!done) { done = true; img.src = g + m[1]; img.hidden = false; img.nextElementSibling.remove(); } }; p.src = g + m[1]; }
+}
+async function loadShows() {
+  try {
+    const j = await fetch("/api/showcase").then(r => r.json());
+    const items = j.items || [];
+    $("shows").innerHTML = items.length ? items.map((x, i) => {
+      const href = x.url || `https://testnet.vibevibe.fun/token/${x.token}`;
+      const meta = [x.graduated ? "graduated" : x.progress != null ? `${Math.round(x.progress)}% to graduation` : "", x.x ? "by @" + esc(x.x) : ""].filter(Boolean).join(" · ");
+      return `<a class="show" href="${esc(href)}" target="_blank" rel="noopener nofollow"><img hidden alt="" data-i="${i}"><span class="ph">${esc((x.symbol || "?").slice(0, 2))}</span><span><b>${esc(x.name || x.symbol)} <span class="tag">$${esc(x.symbol)}</span></b>${x.note ? `<small>${esc(x.note)}</small>` : ""}${meta ? `<span class="meta">${meta}</span>` : ""}</span></a>`;
+    }).join("") : '<p class="note">Nothing here yet. Be the first.</p>';
+    items.forEach((x, i) => { const im = document.querySelector(`#shows img[data-i="${i}"]`); if (im && x.image) logoInto(im, x.image); });
+  } catch (_) { $("shows").innerHTML = '<p class="note">could not load the list right now</p>'; }
+}
+$("sh_go").onclick = async () => {
+  const body = { token: $("sh_tok").value.trim(), url: $("sh_url").value.trim(), x: $("sh_x").value.trim(), note: $("sh_note").value.trim() };
+  if (!/^0x[0-9a-fA-F]{40}$/.test(body.token)) return toast("paste your token address (0x…)");
+  const j = await fetch("/api/showcase", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }).then(r => r.json()).catch(() => ({ ok: false }));
+  const why = { unknown_token: "that token isn't a vibe/vibe launch we know yet", bad_url: "the link must start with https://", bad_x: "that X handle doesn't look right", note_too_long: "keep the line under 140 characters", slow_down: "too many tries, wait a bit" };
+  if (!j.ok) return toast(why[j.error] || "could not add it, try again");
+  toast("added! thanks"); ["sh_tok", "sh_url", "sh_x", "sh_note"].forEach(id => $(id).value = ""); loadShows();
+};
+loadShows();
 const saved = localStorage.getItem("vk_token"); if (saved) { $("tok").value = saved; useToken(saved); }
 </script>
 </body>
